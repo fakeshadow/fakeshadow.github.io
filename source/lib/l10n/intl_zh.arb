@@ -7,6 +7,8 @@
     "orderByTime": "以时间排序",
     "saveChanges": "保存更改",
     "unobtained": "未获得",
+    "jitterRangeToolTip" : "修改生成奖杯时间戳的抖动时间范围",
+    "baseRandomDateTimeRangeToolTip" : "修改默认起始PSN时间和随机时间范围",
     "pageHomeAppBarTitle": "Vita奖杯编辑器",
     "pageHomeUsage": "用途：",
     "pageHomeUsageDetail": "本工具可用来微调奖杯解锁，不能用来迅速解锁全部奖杯\n代码可能存在Bug所以请谨慎使用。使用前请务必备份原始 TRPTRANS.DAT 文件\n",
@@ -16,7 +18,7 @@
     "pageHomeAlertDetail": "1. 使用vitashell导航至 ur0:/user/xx/trophy/data/ 文件夹\n2. 对 NPWRXXXXX_00 文件夹按三角键, 然后选择 Open decrypted 选项并确认\n3. 传输文件夹内解密的 TRPTRANS.DAT \n",
     "pageHomeSelectFiles": "选择文件",
     "pageLocaleTitle": "选择语言",
-    "pageLocaleEN": "英语",
+    "pageLocaleEN": "English",
     "pageLocaleCN": "简体中文",
     "pageEditorFinishAlertTitle": "保存成功",
     "pageEditorModifyLock": "加锁",
@@ -25,5 +27,6 @@
     "pageEditorModifyFinish": "完成",
     "pageEditorFinishAlertDetail": "全部更改已保存。点击 完成 按钮下载新的 TRPTRANS_MOD.DAT 文件\n*.将 TRPTRANS_MOD.DAT 重命名为 TRPTRANS.DAT 文件回传至vita覆盖原始文件(回传前请确保vita的原始 TRPTRANS.DAT 文件处于解密状态)",
     "pageEditorFinishAlertBack": "返回编辑器",
-    "pageEditorFinishAlertFinish": "完成"
+    "pageEditorFinishAlertFinish": "完成",
+    "psnTimeWrongFormatAlert": "时间格式错误"
   }

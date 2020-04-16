@@ -172,6 +172,7 @@ class _TrophyListState extends State<TrophyList> {
       BuildContext context, PSVLocalTrophy trophy, PSVLocalTrophyLoaded state) {
     final PSNTime psnTime1 =
         PSNTime(timeString: _controller.text).adjustTimeString();
+
     BlocProvider.of<PSVLocalTrophyBloc>(context).add(ModifyTrophy(
         trophy: PSVLocalTrophy(
             id: trophy.id,
@@ -253,7 +254,9 @@ class _TrophyListState extends State<TrophyList> {
                                     if (PSNTime().validatePSNTime(value)) {
                                       return "";
                                     } else {
-                                      return "Wrong Format";
+                                      return S
+                                          .of(context)
+                                          .psnTimeWrongFormatAlert;
                                     }
                                   },
                                 ),
@@ -274,10 +277,7 @@ class _TrophyListState extends State<TrophyList> {
                                         S.of(context).pageEditorModifyPick),
                                     onPressed: () async {
                                       final date = await _pickDate(context);
-
                                       final time = await _pickTime(context);
-                                      print(date);
-                                      print(time);
                                     },
                                   ),
                                   FlatButton(
@@ -373,6 +373,15 @@ class _MoreActionButtonState extends State<MoreActionButton> {
                   child: Text(value),
                 );
               }).toList(),
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.swap_horizontal_circle),
+              tooltip: S.of(context).baseRandomDateTimeRangeToolTip,
+            ),
+            IconButton(
+              icon: Icon(Icons.timer),
+              tooltip: S.of(context).baseRandomDateTimeRangeToolTip,
             )
           ],
         ));

@@ -99,6 +99,24 @@ class S {
     );
   }
 
+  String get jitterRangeToolTip {
+    return Intl.message(
+      'Change the jitter for generate trophy timestamps',
+      name: 'jitterRangeToolTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get baseRandomDateTimeRangeToolTip {
+    return Intl.message(
+      'Change the base DateTime and the range of Random DateTime',
+      name: 'baseRandomDateTimeRangeToolTip',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get pageHomeAppBarTitle {
     return Intl.message(
       'Vita Trophy Editor',
@@ -191,7 +209,7 @@ class S {
 
   String get pageLocaleCN {
     return Intl.message(
-      'Simplified Chinese',
+      '简体中文',
       name: 'pageLocaleCN',
       desc: '',
       args: [],
@@ -265,6 +283,15 @@ class S {
     return Intl.message(
       'Finish',
       name: 'pageEditorFinishAlertFinish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get psnTimeWrongFormatAlert {
+    return Intl.message(
+      'DateTime Format Wrong',
+      name: 'psnTimeWrongFormatAlert',
       desc: '',
       args: [],
     );

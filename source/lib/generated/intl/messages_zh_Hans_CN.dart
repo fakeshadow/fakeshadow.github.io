@@ -21,8 +21,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "baseRandomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改默认起始PSN时间和随机时间范围"),
     "bronze" : MessageLookupByLibrary.simpleMessage("铜"),
     "gold" : MessageLookupByLibrary.simpleMessage("金"),
+    "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改生成奖杯时间戳的抖动时间范围"),
     "orderByPSN" : MessageLookupByLibrary.simpleMessage("以PSN排序"),
     "orderByTime" : MessageLookupByLibrary.simpleMessage("以时间排序"),
     "pageEditorFinishAlertBack" : MessageLookupByLibrary.simpleMessage("返回编辑器"),
@@ -42,9 +44,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageHomeUsage" : MessageLookupByLibrary.simpleMessage("用途："),
     "pageHomeUsageDetail" : MessageLookupByLibrary.simpleMessage("本工具可用来微调奖杯解锁，不能用来迅速解锁全部奖杯\n代码可能存在Bug所以请谨慎使用。使用前请务必备份原始 TRPTRANS.DAT 文件\n"),
     "pageLocaleCN" : MessageLookupByLibrary.simpleMessage("简体中文"),
-    "pageLocaleEN" : MessageLookupByLibrary.simpleMessage("英语"),
+    "pageLocaleEN" : MessageLookupByLibrary.simpleMessage("English"),
     "pageLocaleTitle" : MessageLookupByLibrary.simpleMessage("选择语言"),
     "platinum" : MessageLookupByLibrary.simpleMessage("白金"),
+    "psnTimeWrongFormatAlert" : MessageLookupByLibrary.simpleMessage("时间格式错误"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("保存更改"),
     "silver" : MessageLookupByLibrary.simpleMessage("银"),
     "unobtained" : MessageLookupByLibrary.simpleMessage("未获得")

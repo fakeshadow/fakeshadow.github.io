@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import 'package:psv_trophy_editor/repo/local_storeage.dart';
 import 'package:psv_trophy_editor/util/psn_time.dart';
 
 // trophy model
@@ -12,13 +13,12 @@ class PSVLocalTrophy extends Equatable {
   final String name, detail, rarity;
   final PSNTime psnTime1, psnTime2;
 
-  PSVLocalTrophy(
-      {this.id,
-      this.name,
-      this.detail,
-      this.rarity,
-      this.psnTime1,
-      this.psnTime2});
+  PSVLocalTrophy({this.id,
+    this.name,
+    this.detail,
+    this.rarity,
+    this.psnTime1,
+    this.psnTime2});
 
   @override
   List<Object> get props => [id, name, detail, rarity, psnTime1, psnTime2];
@@ -60,13 +60,12 @@ class SetTrophy extends PSVLocalTrophyEvent {
   final String title, trpTrans;
   final List<PSVLocalTrophy> trophies;
 
-  const SetTrophy(
-      {@required this.title,
-      this.havePlat,
-      this.orgSetCount,
-      this.jitter, // jitter is the time gap between two timestamps of one trophy.
-      this.trpTrans,
-      this.trophies});
+  const SetTrophy({@required this.title,
+    this.havePlat,
+    this.orgSetCount,
+    this.jitter, // jitter is the time gap between two timestamps of one trophy.
+    this.trpTrans,
+    this.trophies});
 
   @override
   List<Object> get props =>
@@ -105,19 +104,33 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
   final bool havePlat;
   final String title, trpTrans;
   final List<PSVLocalTrophy> trophies;
+  final PSNTime baseTime, endTime;
 
-  const PSVLocalTrophyLoaded(
-      {this.currentOrder,
-      this.title,
-      this.havePlat,
-      this.orgSetCount,
-      this.jitter,
-      this.trpTrans,
-      this.trophies});
+  const PSVLocalTrophyLoaded({
+    this.currentOrder,
+    this.title,
+    this.havePlat,
+    this.orgSetCount,
+    this.jitter,
+    this.trpTrans,
+    this.trophies,
+    this.baseTime,
+    this.endTime
+  });
 
   @override
   List<Object> get props =>
-      [currentOrder, title, havePlat, orgSetCount, jitter, trpTrans, trophies];
+      [
+        currentOrder,
+        title,
+        havePlat,
+        orgSetCount,
+        jitter,
+        trpTrans,
+        trophies,
+        baseTime,
+        endTime
+      ];
 
   @override
   String toString() =>
@@ -127,11 +140,16 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
 //bloc logic
 class PSVLocalTrophyBloc
     extends Bloc<PSVLocalTrophyEvent, PSVLocalTrophyState> {
+  final LocalStorageRepo localStorageRepo;
+
+  PSVLocalTrophyBloc(this.localStorageRepo);
+
   @override
   PSVLocalTrophyState get initialState => PSVLocalTrophyUninitialized();
 
   // modifyTrophy use a private stream function so that we yield an new state of PSVLocalTrophyLoaded every time.
   Stream<PSVLocalTrophyLoaded> _modifyTrophy(PSVLocalTrophy trophy) async* {
+
     final stateOld = state as PSVLocalTrophyLoaded;
 
     final List<PSVLocalTrophy> trophies = [];
@@ -162,7 +180,7 @@ class PSVLocalTrophyBloc
         final _trophy = trophies[i];
 
         if (_trophy.id != 0) {
-          if (_trophy.psnTime1 != null && _trophy.psnTime2 != null ) {
+          if (_trophy.psnTime1 != null && _trophy.psnTime2 != null) {
             if (_trophy.psnTime1.compareToInMicroSecs(timeLast1) > 0) {
               timeLast1 = _trophy.psnTime1;
             }
@@ -180,7 +198,6 @@ class PSVLocalTrophyBloc
       for (var i = 0; i < trophies.length; i++) {
         final trp = trophies[i];
         if (trp.id == 0) {
-
           if (unlockedBaseCount < stateOld.orgSetCount - 1) {
             // ToDo: add jitter here as there should be some gap in timestamp between the last trophy timestamp and the plat timestamp
             trophies[i] = PSVLocalTrophy(
@@ -188,9 +205,8 @@ class PSVLocalTrophyBloc
                 name: trp.name,
                 detail: trp.detail,
                 rarity: trp.rarity,
-                psnTime1: null ,
+                psnTime1: null,
                 psnTime2: null);
-
           } else {
             // ToDo: add jitter here as there should be some gap in timestamp between the last trophy timestamp and the plat timestamp
             trophies[i] = PSVLocalTrophy(
@@ -198,7 +214,7 @@ class PSVLocalTrophyBloc
                 name: trp.name,
                 detail: trp.detail,
                 rarity: trp.rarity,
-                psnTime1: timeLast1 ,
+                psnTime1: timeLast1,
                 psnTime2: timeLast2);
           }
         }
@@ -212,7 +228,10 @@ class PSVLocalTrophyBloc
         havePlat: stateOld.havePlat,
         jitter: stateOld.jitter,
         trpTrans: stateOld.trpTrans,
-        trophies: trophies);
+        trophies: trophies,
+        baseTime: stateOld.baseTime,
+        endTime: stateOld.endTime
+    );
 
     // we sort our trophies if currentOrder is ByTime
     if (stateOld.currentOrder == 1) {
@@ -229,9 +248,9 @@ class PSVLocalTrophyBloc
         {
           stateOld.trophies.sort((trp1, trp2) {
             final time1 =
-                trp1.psnTime1 == null ? PSNTime.base() : trp1.psnTime1;
+            trp1.psnTime1 == null ? PSNTime.base() : trp1.psnTime1;
             final time2 =
-                trp2.psnTime1 == null ? PSNTime.base() : trp2.psnTime1;
+            trp2.psnTime1 == null ? PSNTime.base() : trp2.psnTime1;
 
             if (isLaterFront) {
               return time2.compareToInMicroSecs(time1);
@@ -259,21 +278,31 @@ class PSVLocalTrophyBloc
         havePlat: stateOld.havePlat,
         jitter: stateOld.jitter,
         trpTrans: stateOld.trpTrans,
-        trophies: stateOld.trophies.map((e) => e).toList());
+        trophies: stateOld.trophies,
+        baseTime: stateOld.baseTime,
+        endTime: stateOld.endTime,
+    );
   }
 
   @override
   Stream<PSVLocalTrophyState> mapEventToState(
       PSVLocalTrophyEvent event) async* {
     if (event is SetTrophy) {
+      final localJitter = this.localStorageRepo.getLocalJitter();
+      final localBasePSNTime = this.localStorageRepo.getLocalBasePSNTime();
+      final localEndPSNTime = this.localStorageRepo.getLocalEndPSNTime();
+
       yield PSVLocalTrophyLoaded(
           currentOrder: 0,
           title: event.title,
           havePlat: event.havePlat,
           orgSetCount: event.orgSetCount,
-          jitter: event.jitter,
+          jitter: localJitter ?? event.jitter,
           trpTrans: event.trpTrans,
-          trophies: event.trophies);
+          trophies: event.trophies,
+          baseTime: localBasePSNTime ?? PSNTime.base(),
+          endTime: localEndPSNTime ?? PSNTime().now()
+      );
     }
 
     if (event is Reset) {

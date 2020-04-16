@@ -21,8 +21,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "baseRandomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the base DateTime and the range of Random DateTime"),
     "bronze" : MessageLookupByLibrary.simpleMessage("Bronze"),
     "gold" : MessageLookupByLibrary.simpleMessage("Gold"),
+    "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the jitter for generate trophy timestamps"),
     "orderByPSN" : MessageLookupByLibrary.simpleMessage("Order by PSN"),
     "orderByTime" : MessageLookupByLibrary.simpleMessage("Order by Time"),
     "pageEditorFinishAlertBack" : MessageLookupByLibrary.simpleMessage("Go Back to Editor"),
@@ -41,10 +43,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageHomeSelectFiles" : MessageLookupByLibrary.simpleMessage("Select files"),
     "pageHomeUsage" : MessageLookupByLibrary.simpleMessage("Usage: "),
     "pageHomeUsageDetail" : MessageLookupByLibrary.simpleMessage("This is a tool for people who want to fine tone their trophies and not an easy unlock all solution.\nCode is not in perfect shape by any means so please use with caution. Always backup your original TRPTRANS.DAT beforehand\n"),
-    "pageLocaleCN" : MessageLookupByLibrary.simpleMessage("Simplified Chinese"),
+    "pageLocaleCN" : MessageLookupByLibrary.simpleMessage("简体中文"),
     "pageLocaleEN" : MessageLookupByLibrary.simpleMessage("English"),
     "pageLocaleTitle" : MessageLookupByLibrary.simpleMessage("Choose Language"),
     "platinum" : MessageLookupByLibrary.simpleMessage("Platinum"),
+    "psnTimeWrongFormatAlert" : MessageLookupByLibrary.simpleMessage("DateTime Format Wrong"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("Save Changes"),
     "silver" : MessageLookupByLibrary.simpleMessage("Silver"),
     "unobtained" : MessageLookupByLibrary.simpleMessage("Unobtained")

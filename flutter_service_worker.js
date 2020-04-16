@@ -4,11 +4,11 @@ const RESOURCES = {
   "index.html": "fd7db75a36114fc43c1f1c3a545b8b09",
 "assets/FontManifest.json": "01700ba55b08a6141f33e168c4a6c22f",
 "assets/fonts/MaterialIcons-Regular.ttf": "56d3ffdef7a25659eab6a68a3fbfaf16",
-"assets/LICENSE": "19c5ac643fc08319d6afb611d628db8e",
+"assets/LICENSE": "c68d9b52ed30c61e67a3788d6199e400",
 "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "115e937bb829a890521f72d2e664b632",
 "manifest.json": "a61d1c58343dddcefd141e0224722130",
-"main.dart.js": "03e37ae17ce9f9625418b14c5f860a1f",
+"main.dart.js": "994caaf1d31bc2aa7857d938c0eb84aa",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1"
