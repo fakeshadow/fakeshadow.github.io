@@ -113,18 +113,6 @@ class SetJitter extends PSVLocalTrophyEvent {
   String toString() => 'SetJitter { jitter: $jitter }';
 }
 
-class SetLocale extends PSVLocalTrophyEvent {
-  final String locale;
-
-  const SetLocale({this.locale});
-
-  @override
-  List<Object> get props => [locale];
-
-  @override
-  String toString() => 'SetLocale { locale: $locale }';
-}
-
 // states for Bloc
 abstract class PSVLocalTrophyState extends Equatable {
   const PSVLocalTrophyState();
@@ -377,11 +365,6 @@ class PSVLocalTrophyBloc
           trophies: _state.trophies,
           baseTime: _state.baseTime,
           endTime: _state.endTime);
-    }
-
-    if (event is SetLocale) {
-      this.localStorageRepo.setLocale(event.locale);
-      yield state;
     }
 
     if (event is SetBaseEndDateTime) {

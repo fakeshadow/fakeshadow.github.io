@@ -28,8 +28,13 @@ class LocalStorageRepo {
     }
   }
 
-  String getLocalLocale()  {
-    return this.storage.getItem("locale");
+  Future<String> getLocalLocale() async {
+    final ready = await this.storage.ready.timeout(Duration(seconds: 3));
+    if (ready) {
+      return this.storage.getItem("locale");
+    } else {
+      throw ("Can't get localLocale");
+    }
   }
 
   Future<int> getLocalJitter() async {

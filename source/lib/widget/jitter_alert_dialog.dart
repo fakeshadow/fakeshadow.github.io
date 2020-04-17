@@ -12,6 +12,7 @@ class JitterRangeAlertDialog extends StatefulWidget {
 
 class _JitterRangeAlertDialogState extends State<JitterRangeAlertDialog> {
   TextEditingController _controller;
+
   // ignore: close_sinks
   PSVLocalTrophyBloc _bloc;
 
@@ -37,6 +38,9 @@ class _JitterRangeAlertDialogState extends State<JitterRangeAlertDialog> {
       elevation: 10,
       content: TextFormField(
         controller: _controller,
+        decoration: InputDecoration(
+            labelText: S.of(context).jitterUnit,
+            labelStyle: TextStyle(color: Colors.black45)),
         autovalidate: true,
         validator: (value) {
           final jitter = int.tryParse(value);

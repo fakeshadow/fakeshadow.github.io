@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:psv_trophy_editor/bloc/locale.dart';
 
 import 'package:psv_trophy_editor/generated/l10n.dart';
-import 'package:psv_trophy_editor/bloc/psv_local_trophy.dart';
 
 class LocaleAlertDialog extends StatelessWidget {
   @override
@@ -18,10 +18,8 @@ class LocaleAlertDialog extends StatelessWidget {
             child: Text(S.of(context).pageLocaleEN),
             onTap: () async {
               await S.load(Locale("en"));
-              BlocProvider.of<PSVLocalTrophyBloc>(context)
-                  .add(SetLocale(locale: "en"));
+              BlocProvider.of<LocaleBloc>(context).add(SetLocale(locale: "en"));
               Navigator.of(context).pop();
-              Navigator.of(context).popAndPushNamed("/");
             },
           ),
           Spacer(),
@@ -29,10 +27,8 @@ class LocaleAlertDialog extends StatelessWidget {
             child: Text(S.of(context).pageLocaleCN),
             onTap: () async {
               await S.load(Locale("zh"));
-              BlocProvider.of<PSVLocalTrophyBloc>(context)
-                  .add(SetLocale(locale: "zh"));
+              BlocProvider.of<LocaleBloc>(context).add(SetLocale(locale: "zh"));
               Navigator.of(context).pop();
-              Navigator.of(context).popAndPushNamed("/");
             },
           )
         ],

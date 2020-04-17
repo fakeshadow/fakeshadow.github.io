@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:psv_trophy_editor/bloc/locale.dart';
 
 import 'package:psv_trophy_editor/generated/l10n.dart';
 
@@ -67,69 +68,80 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).pageHomeAppBarTitle),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.language),
-              onPressed: () => showDialog(
-                context: context,
-                builder: (_) => LocaleAlertDialog(),
-                barrierDismissible: true,
-              ),
-            )
-          ],
-        ),
-        body: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  S.of(context).pageHomeUsage,
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  S.of(context).pageHomeUsageDetail,
-                  style: TextStyle(fontSize: 15),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  S.of(context).pageHomeFiles,
-                  style: TextStyle(fontSize: 16, color: Colors.redAccent),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  S.of(context).pageHomeFilesDetail,
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  S.of(context).pageHomeAlert,
-                  style: TextStyle(fontSize: 16, color: Colors.redAccent),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  S.of(context).pageHomeAlertDetail,
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.left,
-                ),
+    // ignore: close_sinks
+    final localeBloc = BlocProvider.of<LocaleBloc>(context);
+
+    return BlocBuilder(
+      bloc: localeBloc,
+      builder: (context, state) {
+        if (state is NoLocale) {
+          localeBloc.add(LoadLocale());
+        }
+        return Scaffold(
+            appBar: AppBar(
+              title: Text(S.of(context).pageHomeAppBarTitle),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.language),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => LocaleAlertDialog(),
+                    barrierDismissible: true,
+                  ),
+                )
               ],
             ),
-            FlatButton(
-              color: Colors.blue,
-              onPressed: () => startWebFilePicker(context),
-              child: Text(
-                S.of(context).pageHomeSelectFiles,
-                style: TextStyle(fontSize: 30.0, color: Colors.white),
-              ),
-            ),
-          ],
-        )));
+            body: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      S.of(context).pageHomeUsage,
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      S.of(context).pageHomeUsageDetail,
+                      style: TextStyle(fontSize: 15),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      S.of(context).pageHomeFiles,
+                      style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      S.of(context).pageHomeFilesDetail,
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      S.of(context).pageHomeAlert,
+                      style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      S.of(context).pageHomeAlertDetail,
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+                FlatButton(
+                  color: Colors.blue,
+                  onPressed: () => startWebFilePicker(context),
+                  child: Text(
+                    S.of(context).pageHomeSelectFiles,
+                    style: TextStyle(fontSize: 30.0, color: Colors.white),
+                  ),
+                ),
+              ],
+            )));
+      },
+    );
   }
 }

@@ -27,6 +27,15 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  String get jitterUnit {
+    return Intl.message(
+      'Unit microseconds',
+      name: 'jitterUnit',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get bronze {
     return Intl.message(
       'Bronze',

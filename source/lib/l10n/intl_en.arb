@@ -1,4 +1,5 @@
 {
+  "jitterUnit": "Unit microseconds",
   "bronze": "Bronze",
   "silver": "Silver",
   "gold": "Gold",

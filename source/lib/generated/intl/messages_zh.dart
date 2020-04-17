@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bronze" : MessageLookupByLibrary.simpleMessage("铜"),
     "gold" : MessageLookupByLibrary.simpleMessage("金"),
     "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改生成奖杯时间戳的抖动时间范围"),
+    "jitterUnit" : MessageLookupByLibrary.simpleMessage("单位微秒"),
     "jitterWrongFormatAlert" : MessageLookupByLibrary.simpleMessage("抖动格式错误"),
     "orderByPSN" : MessageLookupByLibrary.simpleMessage("以PSN排序"),
     "orderByTime" : MessageLookupByLibrary.simpleMessage("以时间排序"),

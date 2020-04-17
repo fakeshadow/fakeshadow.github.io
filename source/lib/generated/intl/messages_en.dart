@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bronze" : MessageLookupByLibrary.simpleMessage("Bronze"),
     "gold" : MessageLookupByLibrary.simpleMessage("Gold"),
     "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the jitter for generate trophy timestamps"),
+    "jitterUnit" : MessageLookupByLibrary.simpleMessage("Unit microseconds"),
     "jitterWrongFormatAlert" : MessageLookupByLibrary.simpleMessage("Jitter Format Wrong"),
     "orderByPSN" : MessageLookupByLibrary.simpleMessage("Order by PSN"),
     "orderByTime" : MessageLookupByLibrary.simpleMessage("Order by Time"),
