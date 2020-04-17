@@ -30,6 +30,7 @@ class PSVFileParser {
   static const int rarityOff = 1838;
 
   static const int syncedOff = 1844;
+
   // ToDo: investigate the accurate synced string code
   static const String synced = "40";
   static const String unSynced = "20";
@@ -203,13 +204,15 @@ class PSVFileParser {
 
     final length = this.trophies.length;
     for (var i = 0; i < length; i++) {
-        transNew = _clearTrophy(transNew, this.trophies[i].id, length);
+      transNew = _clearTrophy(transNew, this.trophies[i].id, length);
     }
 
     // sort trophies from early to late order.
     this.trophies.sort((trp1, trp2) {
-      final time1 = trp1.psnTime1 == null ? PSNTime.base() : trp1.psnTime1;
-      final time2 = trp2.psnTime1 == null ? PSNTime.base() : trp2.psnTime1;
+      final time1 =
+          trp1.psnTime1 == null ? PSNTime.baseString() : trp1.psnTime1;
+      final time2 =
+          trp2.psnTime1 == null ? PSNTime.baseString() : trp2.psnTime1;
       return time1.compareToInMicroSecs(time2);
     });
 

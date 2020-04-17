@@ -21,10 +21,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "baseRandomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the base DateTime and the range of Random DateTime"),
     "bronze" : MessageLookupByLibrary.simpleMessage("Bronze"),
     "gold" : MessageLookupByLibrary.simpleMessage("Gold"),
     "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the jitter for generate trophy timestamps"),
+    "jitterWrongFormatAlert" : MessageLookupByLibrary.simpleMessage("Jitter Format Wrong"),
     "orderByPSN" : MessageLookupByLibrary.simpleMessage("Order by PSN"),
     "orderByTime" : MessageLookupByLibrary.simpleMessage("Order by Time"),
     "pageEditorFinishAlertBack" : MessageLookupByLibrary.simpleMessage("Go Back to Editor"),
@@ -35,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageEditorModifyLock" : MessageLookupByLibrary.simpleMessage("Lock"),
     "pageEditorModifyPick" : MessageLookupByLibrary.simpleMessage("Pick"),
     "pageEditorModifyRandom" : MessageLookupByLibrary.simpleMessage("Random"),
+    "pageEditorRandomPSNTimeEndDefault" : MessageLookupByLibrary.simpleMessage("Unset. Current System Time will be used."),
     "pageHomeAlert" : MessageLookupByLibrary.simpleMessage("*.TRPTRANS.DAT must be in the decrypted form before transfer:"),
     "pageHomeAlertDetail" : MessageLookupByLibrary.simpleMessage("1. Navigate to ur0:/user/xx/trophy/data/ folder using vitashell.\n2. Select NPWRXXXXX_00 folder and press triangle button, then choose Open decrypted and confirm\n3. Transfer decrypted TRPTRANS.DAT inside the folder\n"),
     "pageHomeAppBarTitle" : MessageLookupByLibrary.simpleMessage("Vita Trophy Editor"),
@@ -48,6 +49,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageLocaleTitle" : MessageLookupByLibrary.simpleMessage("Choose Language"),
     "platinum" : MessageLookupByLibrary.simpleMessage("Platinum"),
     "psnTimeWrongFormatAlert" : MessageLookupByLibrary.simpleMessage("DateTime Format Wrong"),
+    "randomDateTimeRangeBegin" : MessageLookupByLibrary.simpleMessage("Begin"),
+    "randomDateTimeRangeEnd" : MessageLookupByLibrary.simpleMessage("End"),
+    "randomDateTimeRangeTimeZoneAlert" : MessageLookupByLibrary.simpleMessage("*.DateTime from picker in your local timezone will be converted and displayed as UTC time."),
+    "randomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the range of random DateTime(Only for random trophy time generation)"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("Save Changes"),
     "silver" : MessageLookupByLibrary.simpleMessage("Silver"),
     "unobtained" : MessageLookupByLibrary.simpleMessage("Unobtained")

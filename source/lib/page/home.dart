@@ -8,14 +8,9 @@ import 'package:psv_trophy_editor/generated/l10n.dart';
 
 import 'package:psv_trophy_editor/bloc/psv_local_trophy.dart';
 import 'package:psv_trophy_editor/util/psv_data.dart';
+import 'package:psv_trophy_editor/widget/locale_alert_dialog.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-
+class HomePage extends StatelessWidget {
   startWebFilePicker(BuildContext context) async {
     final PSVLocalTrophyBloc bloc =
         BlocProvider.of<PSVLocalTrophyBloc>(context);
@@ -136,38 +131,5 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         )));
-  }
-}
-
-class LocaleAlertDialog extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title:
-          Text(S.of(context).pageLocaleTitle, style: TextStyle(fontSize: 20)),
-      elevation: 10,
-      content: Row(
-        children: <Widget>[
-          InkWell(
-            child: Text(S.of(context).pageLocaleEN),
-            onTap: () async {
-              await S.load(Locale("en"));
-              Navigator.of(context).pop();
-              Navigator.of(context).popAndPushNamed("/");
-            },
-          ),
-          Spacer(),
-          InkWell(
-            child: Text(S.of(context).pageLocaleCN),
-            onTap: () async {
-              await S.load(Locale("zh"));
-              Navigator.of(context).pop();
-              Navigator.of(context).popAndPushNamed("/");
-            },
-          )
-        ],
-      ),
-    );
   }
 }

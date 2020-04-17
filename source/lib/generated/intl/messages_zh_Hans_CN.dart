@@ -21,10 +21,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "baseRandomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改默认起始PSN时间和随机时间范围"),
     "bronze" : MessageLookupByLibrary.simpleMessage("铜"),
     "gold" : MessageLookupByLibrary.simpleMessage("金"),
     "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改生成奖杯时间戳的抖动时间范围"),
+    "jitterWrongFormatAlert" : MessageLookupByLibrary.simpleMessage("抖动格式错误"),
     "orderByPSN" : MessageLookupByLibrary.simpleMessage("以PSN排序"),
     "orderByTime" : MessageLookupByLibrary.simpleMessage("以时间排序"),
     "pageEditorFinishAlertBack" : MessageLookupByLibrary.simpleMessage("返回编辑器"),
@@ -35,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageEditorModifyLock" : MessageLookupByLibrary.simpleMessage("加锁"),
     "pageEditorModifyPick" : MessageLookupByLibrary.simpleMessage("挑选"),
     "pageEditorModifyRandom" : MessageLookupByLibrary.simpleMessage("随机"),
+    "pageEditorRandomPSNTimeEndDefault" : MessageLookupByLibrary.simpleMessage("未设定。使用当前系统时间"),
     "pageHomeAlert" : MessageLookupByLibrary.simpleMessage("*.在传输前请确保 TRPTRANS.DAT 文件是解密状态："),
     "pageHomeAlertDetail" : MessageLookupByLibrary.simpleMessage("1. 使用vitashell导航至 ur0:/user/xx/trophy/data/ 文件夹\n2. 对 NPWRXXXXX_00 文件夹按三角键, 然后选择 Open decrypted 选项并确认\n3. 传输文件夹内解密的 TRPTRANS.DAT \n"),
     "pageHomeAppBarTitle" : MessageLookupByLibrary.simpleMessage("Vita奖杯编辑器"),
@@ -48,6 +49,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageLocaleTitle" : MessageLookupByLibrary.simpleMessage("选择语言"),
     "platinum" : MessageLookupByLibrary.simpleMessage("白金"),
     "psnTimeWrongFormatAlert" : MessageLookupByLibrary.simpleMessage("时间格式错误"),
+    "randomDateTimeRangeBegin" : MessageLookupByLibrary.simpleMessage("起点"),
+    "randomDateTimeRangeEnd" : MessageLookupByLibrary.simpleMessage("终点"),
+    "randomDateTimeRangeTimeZoneAlert" : MessageLookupByLibrary.simpleMessage("*.挑选的时间将会从你的本地时区转换为UTC时间并显示"),
+    "randomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改随机PSN时间范围(仅用于随机生成奖杯)"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("保存更改"),
     "silver" : MessageLookupByLibrary.simpleMessage("银"),
     "unobtained" : MessageLookupByLibrary.simpleMessage("未获得")

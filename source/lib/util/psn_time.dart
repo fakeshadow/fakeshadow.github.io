@@ -7,7 +7,7 @@ class PSNTime {
 
   // we use BaseTimeString as base time and set up a const micros between the base and unix epoch time.
   static const microsSinceBaseToUnixEpoch = 62135596800000000;
-  static const BaseTimeString = "0001-01-01 01:01:01.000000";
+  static const BaseTimeString = "2008-07-03 01:01:01.000000";
   static const SecInMicroSecs = 1000000;
 
   // total length of time string
@@ -19,21 +19,24 @@ class PSNTime {
 
   PSNTime({this.timeString});
 
-  static PSNTime base() {
+  static PSNTime baseString() {
     return PSNTime(timeString: BaseTimeString);
   }
 
-  PSNTime now() {
-    final now = DateTime.now().toUtc().toString();
-    final time = _toDateTimeSec(now);
-    return PSNTime(timeString: _dateTimeWithoutSubSecs(time) + "000000");
+  static DateTime baseDateTime() {
+    return DateTime.parse(BaseTimeString + "Z");
+  }
+
+  static DateTime nowDateTime() {
+    return DateTime.now().toUtc();
   }
 
   BigInt microsSinceBaseTime() {
     final timeSecs = _toDateTimeSec(this.timeString);
     final timeSubSec = _toMicro(this.timeString);
 
-    final microsOff = BigInt.from(microsSinceBaseToUnixEpoch + timeSecs.microsecondsSinceEpoch);
+    final microsOff = BigInt.from(
+        microsSinceBaseToUnixEpoch + timeSecs.microsecondsSinceEpoch);
     final micros = BigInt.from(timeSubSec);
 
     return microsOff + micros;
@@ -72,7 +75,8 @@ class PSNTime {
       newMicros = SecInMicroSecs + newMicros;
     }
 
-    final time2String = _dateTimeWithoutSubSecs(tempDateTime) + _adjustMicrosString(newMicros.toString(), true);
+    final time2String = _dateTimeWithoutSubSecs(tempDateTime) +
+        _adjustMicrosString(newMicros.toString(), true);
 
     return PSNTime(timeString: time2String);
   }
@@ -203,20 +207,30 @@ class PSNTime {
     }
 
     return _adjustMicrosString(time1, false);
-
   }
 
-  static randomPSNTime(DateTime begin, DateTime end) {
-    final _begin = begin != null ? begin : DateTime.utc(2008, 7, 3);
+  // generate a PSNTime with randomized sub minutes.
+  static randomPSNTimeSubMin(DateTime begin) {
+    final randSecs = Random().nextInt(60);
+    final randMicros = Random().nextInt(SecInMicroSecs);
+
+    final newDate = begin.add(Duration(seconds: randSecs));
+
+    return PSNTime(
+        timeString: _dateTimeWithoutSubSecs(newDate) +
+            _adjustMicrosString(randMicros.toString(), true));
+  }
+
+  static randomPSNTimeFromRange(DateTime begin, DateTime end) {
     final _end = end != null ? end : DateTime.now().toUtc();
 
     final newMills =
-        ((_end.millisecondsSinceEpoch - _begin.millisecondsSinceEpoch) *
+        ((_end.millisecondsSinceEpoch - begin.millisecondsSinceEpoch) *
                 Random().nextDouble())
             .round();
-    final randMicros = Random().nextInt(999999);
+    final randMicros = Random().nextInt(SecInMicroSecs);
 
-    final newDate = _begin.add(Duration(milliseconds: newMills));
+    final newDate = begin.add(Duration(milliseconds: newMills));
 
     return PSNTime(
         timeString: _dateTimeWithoutSubSecs(newDate) +

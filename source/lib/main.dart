@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:psv_trophy_editor/generated/l10n.dart';
 
 import 'package:psv_trophy_editor/bloc/psv_local_trophy.dart';
-import 'package:psv_trophy_editor/repo/local_storeage.dart';
 import 'package:psv_trophy_editor/page/editor.dart';
 import 'package:psv_trophy_editor/page/home.dart';
+import 'package:psv_trophy_editor/repo/local_storage.dart';
 
 void main() => runApp(MyApp());
 

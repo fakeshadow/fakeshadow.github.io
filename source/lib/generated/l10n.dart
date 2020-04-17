@@ -108,10 +108,37 @@ class S {
     );
   }
 
-  String get baseRandomDateTimeRangeToolTip {
+  String get randomDateTimeRangeToolTip {
     return Intl.message(
-      'Change the base DateTime and the range of Random DateTime',
-      name: 'baseRandomDateTimeRangeToolTip',
+      'Change the range of random DateTime(Only for random trophy time generation)',
+      name: 'randomDateTimeRangeToolTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get randomDateTimeRangeTimeZoneAlert {
+    return Intl.message(
+      '*.DateTime from picker in your local timezone will be converted and displayed as UTC time.',
+      name: 'randomDateTimeRangeTimeZoneAlert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get randomDateTimeRangeBegin {
+    return Intl.message(
+      'Begin',
+      name: 'randomDateTimeRangeBegin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get randomDateTimeRangeEnd {
+    return Intl.message(
+      'End',
+      name: 'randomDateTimeRangeEnd',
       desc: '',
       args: [],
     );
@@ -288,10 +315,28 @@ class S {
     );
   }
 
+  String get pageEditorRandomPSNTimeEndDefault {
+    return Intl.message(
+      'Unset. Current System Time will be used.',
+      name: 'pageEditorRandomPSNTimeEndDefault',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get psnTimeWrongFormatAlert {
     return Intl.message(
       'DateTime Format Wrong',
       name: 'psnTimeWrongFormatAlert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get jitterWrongFormatAlert {
+    return Intl.message(
+      'Jitter Format Wrong',
+      name: 'jitterWrongFormatAlert',
       desc: '',
       args: [],
     );

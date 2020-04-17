@@ -8,7 +8,10 @@
   "saveChanges": "Save Changes",
   "unobtained": "Unobtained",
   "jitterRangeToolTip" : "Change the jitter for generate trophy timestamps",
-  "baseRandomDateTimeRangeToolTip" : "Change the base DateTime and the range of Random DateTime",
+  "randomDateTimeRangeToolTip" : "Change the range of random DateTime(Only for random trophy time generation)",
+  "randomDateTimeRangeTimeZoneAlert": "*.DateTime from picker in your local timezone will be converted and displayed as UTC time.",
+  "randomDateTimeRangeBegin": "Begin",
+  "randomDateTimeRangeEnd": "End",
   "pageHomeAppBarTitle": "Vita Trophy Editor",
   "pageHomeUsage": "Usage: ",
   "pageHomeUsageDetail": "This is a tool for people who want to fine tone their trophies and not an easy unlock all solution.\nCode is not in perfect shape by any means so please use with caution. Always backup your original TRPTRANS.DAT beforehand\n",
@@ -28,5 +31,7 @@
   "pageEditorFinishAlertDetail": "All changes have been saved. Press Finish button to download TRPTRANS_MOD.DAT\n*.Rename TRPTRANS_MOD.DAT to TRPTRANS.DAT, transfer back to Vita and overwrite the original one(Be sure to decrypt the original file before overwrite)",
   "pageEditorFinishAlertBack": "Go Back to Editor",
   "pageEditorFinishAlertFinish": "Finish",
-  "psnTimeWrongFormatAlert": "DateTime Format Wrong"
+  "pageEditorRandomPSNTimeEndDefault": "Unset. Current System Time will be used.",
+  "psnTimeWrongFormatAlert": "DateTime Format Wrong",
+  "jitterWrongFormatAlert": "Jitter Format Wrong"
 }
