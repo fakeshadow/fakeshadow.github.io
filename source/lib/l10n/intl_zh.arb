@@ -10,6 +10,7 @@
   "orderByTime": "以时间排序",
   "saveChanges": "保存更改",
   "unobtained": "未获得",
+  "searchTrophyToolTip": "搜索列表中的奖杯",
   "jitterRangeToolTip": "修改生成奖杯时间戳的抖动时间范围",
   "randomDateTimeRangeToolTip": "修改随机PSN时间范围(仅用于随机生成奖杯)",
   "randomDateTimeRangeTimeZoneAlert": "*.挑选的时间将会从你的本地时区转换为UTC时间并显示",

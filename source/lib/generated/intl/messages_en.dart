@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "randomDateTimeRangeTimeZoneAlert" : MessageLookupByLibrary.simpleMessage("*.DateTime from picker in your local timezone will be converted and displayed as UTC time."),
     "randomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the range of random DateTime(Only for random trophy time generation)"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("Save Changes"),
+    "searchTrophyToolTip" : MessageLookupByLibrary.simpleMessage("Search trophies in the list"),
     "silver" : MessageLookupByLibrary.simpleMessage("Silver"),
     "titleDefault" : MessageLookupByLibrary.simpleMessage("PSV Trophy Editor"),
     "titleHead" : MessageLookupByLibrary.simpleMessage("Current Editting: "),

@@ -126,6 +126,15 @@ class S {
     );
   }
 
+  String get searchTrophyToolTip {
+    return Intl.message(
+      'Search trophies in the list',
+      name: 'searchTrophyToolTip',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get jitterRangeToolTip {
     return Intl.message(
       'Change the jitter for generate trophy timestamps',

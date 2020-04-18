@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "randomDateTimeRangeTimeZoneAlert" : MessageLookupByLibrary.simpleMessage("*.挑选的时间将会从你的本地时区转换为UTC时间并显示"),
     "randomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改随机PSN时间范围(仅用于随机生成奖杯)"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("保存更改"),
+    "searchTrophyToolTip" : MessageLookupByLibrary.simpleMessage("搜索列表中的奖杯"),
     "silver" : MessageLookupByLibrary.simpleMessage("银"),
     "titleDefault" : MessageLookupByLibrary.simpleMessage("PSV奖杯编辑器"),
     "titleHead" : MessageLookupByLibrary.simpleMessage("正在编辑: "),

@@ -19,14 +19,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
-    final titleBolc = SystemBloc(repo);
+    final systemBloc = SystemBloc(repo);
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => titleBolc),
+          BlocProvider(create: (context) => systemBloc),
           BlocProvider(create: (context) => PSVLocalTrophyBloc(repo))
         ],
         child: BlocBuilder(
-          bloc: titleBolc,
+          bloc: systemBloc,
           builder: (context, state) {
             return MaterialApp(
               localizationsDelegates: [
