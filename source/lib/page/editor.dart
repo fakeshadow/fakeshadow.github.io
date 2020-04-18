@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:psv_trophy_editor/bloc/psv_local_trophy.dart';
+import 'package:psv_trophy_editor/bloc/system.dart';
 import 'package:psv_trophy_editor/generated/l10n.dart';
 import 'package:psv_trophy_editor/util/psn_time.dart';
 
@@ -21,33 +22,40 @@ class EditorPage extends StatelessWidget {
     orders.add(S.of(context).orderByPSN);
     orders.add(S.of(context).orderByTime);
 
-    return Scaffold(
-        appBar: AppBar(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Padding(
-          padding:
-              EdgeInsets.only(right: padding - 100 > 0 ? padding - 100 : 0),
-          child: FloatingActionButton(
-            tooltip: S.of(context).saveChanges,
-            backgroundColor: Colors.transparent,
-            isExtended: true,
-            child: Icon(Icons.save, color: Colors.blue),
-            mini: padding > 10 ? true : false,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (_) => FinishAlertDialog(),
-              barrierDismissible: false,
+    return WillPopScope(
+      onWillPop: () async {
+        BlocProvider.of<SystemBloc>(context)
+            .add(SetSystem(title: S.of(context).titleDefault));
+        return true;
+      },
+      child: Scaffold(
+          appBar: AppBar(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButton: Padding(
+            padding:
+                EdgeInsets.only(right: padding - 100 > 0 ? padding - 100 : 0),
+            child: FloatingActionButton(
+              tooltip: S.of(context).saveChanges,
+              backgroundColor: Colors.transparent,
+              isExtended: true,
+              child: Icon(Icons.save, color: Colors.blue),
+              mini: padding > 10 ? true : false,
+              onPressed: () => showDialog(
+                context: context,
+                builder: (_) => FinishAlertDialog(),
+                barrierDismissible: false,
+              ),
             ),
           ),
-        ),
-        body: Column(
-          children: <Widget>[
-            MoreActionRow(padding: padding, orders: orders),
-            Expanded(
-              child: TrophyList(padding: padding),
-            ),
-          ],
-        ));
+          body: Column(
+            children: <Widget>[
+              MoreActionRow(padding: padding, orders: orders),
+              Expanded(
+                child: TrophyList(padding: padding),
+              ),
+            ],
+          )),
+    );
   }
 }
 
@@ -144,7 +152,9 @@ class _TrophyListState extends State<TrophyList> {
 
   void _rand(PSVLocalTrophyLoaded state) {
     setState(() {
-      _controller.text = PSNTime.randomPSNTimeFromRange(state.baseTime, state.endTime).timeString;
+      _controller.text =
+          PSNTime.randomPSNTimeFromRange(state.baseTime, state.endTime)
+              .timeString;
     });
   }
 
@@ -192,115 +202,111 @@ class _TrophyListState extends State<TrophyList> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          EdgeInsets.only(left: widget.padding, right: widget.padding, top: 10),
-      child: BlocBuilder<PSVLocalTrophyBloc, PSVLocalTrophyState>(
-        bloc: BlocProvider.of<PSVLocalTrophyBloc>(context),
-        builder: (context, state) {
-          if (state is PSVLocalTrophyLoaded) {
-            return ListView.builder(
-              itemCount: state.trophies.length,
-              itemBuilder: (BuildContext context, int index) {
-                final trophy = state.trophies[index];
-                final textColor = _mapColor(trophy.rarity);
-                final time1 = trophy.psnTime1 == null
-                    ? S.of(context).unobtained
-                    : trophy.psnTime1.timeString;
-                final time2 =
-                    trophy.psnTime2 == null ? "" : trophy.psnTime2.timeString;
-                final time = "$time1  \n$time2";
-                return InkWell(
-                  onTap: () {
-                    if (!(trophy.id == 0 && state.havePlat == true)) {
-                      if (trophy.psnTime1 != null) {
-                        _controller.text = trophy.psnTime1.timeString;
-                      } else {
-                        _controller.text = PSNTime.BaseTimeString;
-                      }
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: Text(trophy.name,
-                                    style: TextStyle(
-                                        fontSize: 20, color: textColor)),
-                                elevation: 10,
-                                content: TextFormField(
-                                  controller: _controller,
-                                  autovalidate: true,
-                                  validator: (value) {
-                                    if (PSNTime().validatePSNTime(value)) {
-                                      return "";
-                                    } else {
-                                      return S
-                                          .of(context)
-                                          .psnTimeWrongFormatAlert;
-                                    }
-                                  },
-                                ),
-                                actions: <Widget>[
-                                  trophy.psnTime1 != null
-                                      ? FlatButton(
-                                          color: Colors.red,
-                                          child: Text(S
-                                              .of(context)
-                                              .pageEditorModifyLock),
-                                          onPressed: () => _lockTrophy(
-                                              context, trophy, state),
-                                        )
-                                      : Container(),
-                                  FlatButton(
-                                    color: Colors.blue,
-                                    child: Text(
-                                        S.of(context).pageEditorModifyPick),
-                                    onPressed: () => _pickDateTime(),
-                                  ),
-                                  FlatButton(
-                                    color: Colors.blue,
-                                    child: Text(
-                                        S.of(context).pageEditorModifyRandom),
-                                    onPressed: () => _rand(state),
-                                  ),
-                                  FlatButton(
-                                    child: Text(
-                                        S.of(context).pageEditorModifyFinish),
-                                    color: Colors.blue,
-                                    onLongPress: null,
-                                    onPressed: () {
-                                      if (isValid) {
-                                        _finishEdit(context, trophy, state);
+    return Scrollbar(
+      child: Padding(
+        padding:
+            EdgeInsets.only(left: widget.padding, right: widget.padding, top: 10),
+        child: BlocBuilder<PSVLocalTrophyBloc, PSVLocalTrophyState>(
+          bloc: BlocProvider.of<PSVLocalTrophyBloc>(context),
+          builder: (context, state) {
+            if (state is PSVLocalTrophyLoaded) {
+              return ListView.builder(
+                itemCount: state.trophies.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final trophy = state.trophies[index];
+                  final textColor = _mapColor(trophy.rarity);
+                  final time1 = trophy.psnTime1 == null
+                      ? S.of(context).unobtained
+                      : trophy.psnTime1.timeString;
+                  final time2 =
+                      trophy.psnTime2 == null ? "" : trophy.psnTime2.timeString;
+                  final time = "$time1  \n$time2";
+                  return InkWell(
+                    onTap: () {
+                      if (!(trophy.id == 0 && state.havePlat == true)) {
+                        if (trophy.psnTime1 != null) {
+                          _controller.text = trophy.psnTime1.timeString;
+                        } else {
+                          _controller.text = PSNTime.BaseTimeString;
+                        }
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                                  title: Text(trophy.name,
+                                      style: TextStyle(
+                                          fontSize: 20, color: textColor)),
+                                  elevation: 10,
+                                  content: TextFormField(
+                                    controller: _controller,
+                                    autovalidate: true,
+                                    validator: (value) {
+                                      if (PSNTime().validatePSNTime(value)) {
+                                        return "";
+                                      } else {
+                                        return S
+                                            .of(context)
+                                            .psnTimeWrongFormatAlert;
                                       }
                                     },
-                                  )
-                                ],
-                              ));
-                    }
-                  },
-                  hoverColor: Colors.blue,
-                  child: ListTile(
-                      leading: Text(_mapRarity(trophy.rarity, context),
-                          style: TextStyle(color: textColor)),
-                      title:
-                          Text(trophy.name, style: TextStyle(color: textColor)),
-                      subtitle: Text(trophy.detail,
-                          style: TextStyle(color: textColor)),
-                      trailing: Text(time, style: TextStyle(color: textColor)),
-                      isThreeLine: true,
-                      contentPadding: EdgeInsets.only(top: 1, bottom: 1)),
-                );
-              },
-            );
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
+                                  ),
+                                  actions: <Widget>[
+                                    trophy.psnTime1 != null
+                                        ? FlatButton(
+                                            color: Colors.red,
+                                            child: Text(S
+                                                .of(context)
+                                                .pageEditorModifyLock),
+                                            onPressed: () => _lockTrophy(
+                                                context, trophy, state),
+                                          )
+                                        : Container(),
+                                    FlatButton(
+                                      color: Colors.blue,
+                                      child: Text(
+                                          S.of(context).pageEditorModifyPick),
+                                      onPressed: () => _pickDateTime(),
+                                    ),
+                                    FlatButton(
+                                      color: Colors.blue,
+                                      child: Text(
+                                          S.of(context).pageEditorModifyRandom),
+                                      onPressed: () => _rand(state),
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                          S.of(context).pageEditorModifyFinish),
+                                      color: Colors.blue,
+                                      onLongPress: null,
+                                      onPressed: () {
+                                        if (isValid) {
+                                          _finishEdit(context, trophy, state);
+                                        }
+                                      },
+                                    )
+                                  ],
+                                ));
+                      }
+                    },
+                    hoverColor: Colors.blue,
+                    child: ListTile(
+                        leading: Text(_mapRarity(trophy.rarity, context),
+                            style: TextStyle(color: textColor)),
+                        title:
+                            Text(trophy.name, style: TextStyle(color: textColor)),
+                        subtitle: Text(trophy.detail,
+                            style: TextStyle(color: textColor)),
+                        trailing: Text(time, style: TextStyle(color: textColor)),
+                        isThreeLine: true,
+                        contentPadding: EdgeInsets.only(top: 1, bottom: 1)),
+                  );
+                },
+              );
+            } else {
+              return Container(child: CircularProgressIndicator(),height: 50);
+            }
+          },
+        ),
       ),
     );
   }
 }
-
-
-
-
-
-

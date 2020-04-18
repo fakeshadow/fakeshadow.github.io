@@ -56,6 +56,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "randomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the range of random DateTime(Only for random trophy time generation)"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("Save Changes"),
     "silver" : MessageLookupByLibrary.simpleMessage("Silver"),
+    "titleDefault" : MessageLookupByLibrary.simpleMessage("PSV Trophy Editor"),
+    "titleHead" : MessageLookupByLibrary.simpleMessage("Current Editting: "),
     "unobtained" : MessageLookupByLibrary.simpleMessage("Unobtained")
   };
 }

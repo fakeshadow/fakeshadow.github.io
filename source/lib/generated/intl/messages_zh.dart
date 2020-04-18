@@ -56,6 +56,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "randomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改随机PSN时间范围(仅用于随机生成奖杯)"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("保存更改"),
     "silver" : MessageLookupByLibrary.simpleMessage("银"),
+    "titleDefault" : MessageLookupByLibrary.simpleMessage("PSV奖杯编辑器"),
+    "titleHead" : MessageLookupByLibrary.simpleMessage("正在编辑: "),
     "unobtained" : MessageLookupByLibrary.simpleMessage("未获得")
   };
 }

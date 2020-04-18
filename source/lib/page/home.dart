@@ -3,7 +3,7 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:psv_trophy_editor/bloc/locale.dart';
+import 'package:psv_trophy_editor/bloc/system.dart';
 
 import 'package:psv_trophy_editor/generated/l10n.dart';
 
@@ -61,6 +61,10 @@ class HomePage extends StatelessWidget {
             trpTrans: parser2.trpTrans,
             trophies: parser2.trophies));
 
+        final title = S.of(context).titleHead + parser2.title;
+
+        BlocProvider.of<SystemBloc>(context).add(SetSystem(title: title));
+
         Navigator.of(context).pushNamed("editor");
       });
     });
@@ -68,14 +72,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
-    final localeBloc = BlocProvider.of<LocaleBloc>(context);
-
     return BlocBuilder(
-      bloc: localeBloc,
+      bloc: BlocProvider.of<SystemBloc>(context),
       builder: (context, state) {
-        if (state is NoLocale) {
-          localeBloc.add(LoadLocale());
+        if (state is NoSystem) {
+          BlocProvider.of<SystemBloc>(context).add(LoadSystem(buildContext: context));
         }
         return Scaffold(
             appBar: AppBar(

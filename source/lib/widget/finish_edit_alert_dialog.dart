@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -7,16 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:psv_trophy_editor/bloc/psv_local_trophy.dart';
+import 'package:psv_trophy_editor/bloc/system.dart';
 import 'package:psv_trophy_editor/generated/l10n.dart';
 import 'package:psv_trophy_editor/util/psv_data.dart';
 
-
 class FinishAlertDialog extends StatelessWidget {
   void _saveFile(BuildContext context) {
-    // ignore: close_sinks
-    final _bloc = BlocProvider.of<PSVLocalTrophyBloc>(context);
-
-    final state = _bloc.state as PSVLocalTrophyLoaded;
+    final state = BlocProvider.of<PSVLocalTrophyBloc>(context).state
+        as PSVLocalTrophyLoaded;
     final trans = PSVFileParser.fromBlocState(state).modifyTrans();
 
     final content = base64Encode(trans);
@@ -47,6 +46,8 @@ class FinishAlertDialog extends StatelessWidget {
             color: Colors.blue,
             onPressed: () {
               _saveFile(context);
+              BlocProvider.of<SystemBloc>(context)
+                  .add(SetSystem(title: S.of(context).titleDefault));
               Navigator.of(context).popUntil(ModalRoute.withName('/'));
             })
       ],

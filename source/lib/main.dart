@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:psv_trophy_editor/bloc/locale.dart';
+import 'package:psv_trophy_editor/bloc/system.dart';
 
 import 'package:psv_trophy_editor/generated/l10n.dart';
 
@@ -18,30 +18,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final titleBolc = SystemBloc(repo);
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => LocaleBloc(repo)),
+          BlocProvider(create: (context) => titleBolc),
           BlocProvider(create: (context) => PSVLocalTrophyBloc(repo))
         ],
-        child: MaterialApp(
-          localizationsDelegates: [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
-          title: 'PSV Trophy Editor',
-          routes: {
-            'editor': (context) => EditorPage(),
-            '/': (context) => HomePage(),
+        child: BlocBuilder(
+          bloc: titleBolc,
+          builder: (context, state) {
+            return MaterialApp(
+              localizationsDelegates: [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+              title: state is HaveSystem ? state.title : "PSV Trophy Editor",
+              routes: {
+                'editor': (context) => EditorPage(),
+                '/': (context) => HomePage(),
+              },
+              initialRoute: '/',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                  brightness: Brightness.light,
+                  primarySwatch: Colors.blue,
+                  accentColor: Colors.deepPurple),
+            );
           },
-          initialRoute: '/',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              brightness: Brightness.light,
-              primarySwatch: Colors.blue,
-              accentColor: Colors.deepPurple),
         ));
   }
 }

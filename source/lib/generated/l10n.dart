@@ -27,6 +27,24 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  String get titleDefault {
+    return Intl.message(
+      'PSV Trophy Editor',
+      name: 'titleDefault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get titleHead {
+    return Intl.message(
+      'Current Editting: ',
+      name: 'titleHead',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get jitterUnit {
     return Intl.message(
       'Unit microseconds',
