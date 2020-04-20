@@ -334,12 +334,27 @@ class PSVLocalTrophyBloc
               return time1.compareToInMicroSecs(time2);
             }
           });
+          stateOld.searchedTrophies.sort((trp1, trp2) {
+            final time1 =
+                trp1.psnTime1 == null ? PSNTime.baseString() : trp1.psnTime1;
+            final time2 =
+                trp2.psnTime1 == null ? PSNTime.baseString() : trp2.psnTime1;
+
+            if (isLaterFront) {
+              return time2.compareToInMicroSecs(time1);
+            } else {
+              return time1.compareToInMicroSecs(time2);
+            }
+          });
           currentOrder = 1;
         }
         break;
       case Order.PSN:
         {
           stateOld.trophies.sort((trp1, trp2) {
+            return trp1.id.compareTo(trp2.id);
+          });
+          stateOld.searchedTrophies.sort((trp1, trp2) {
             return trp1.id.compareTo(trp2.id);
           });
           currentOrder = 0;
