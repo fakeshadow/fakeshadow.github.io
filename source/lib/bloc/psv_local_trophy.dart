@@ -113,6 +113,19 @@ class SetJitter extends PSVLocalTrophyEvent {
   String toString() => 'SetJitter { jitter: $jitter }';
 }
 
+class SetSearchedTrophy extends PSVLocalTrophyEvent {
+  final List<PSVLocalTrophy> searchedTrophies;
+
+  const SetSearchedTrophy({this.searchedTrophies});
+
+  @override
+  List<Object> get props => [searchedTrophies];
+
+  @override
+  String toString() =>
+      'SetSearchResult { searchedTrophies: $searchedTrophies }';
+}
+
 // states for Bloc
 abstract class PSVLocalTrophyState extends Equatable {
   const PSVLocalTrophyState();
@@ -130,6 +143,7 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
   final bool havePlat;
   final String title, trpTrans;
   final List<PSVLocalTrophy> trophies;
+  final List<PSVLocalTrophy> searchedTrophies;
   final DateTime baseTime, endTime;
 
   const PSVLocalTrophyLoaded(
@@ -140,6 +154,7 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
       this.jitter,
       this.trpTrans,
       this.trophies,
+      this.searchedTrophies,
       this.baseTime,
       this.endTime});
 
@@ -152,9 +167,34 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
         jitter,
         trpTrans,
         trophies,
+        searchedTrophies,
         baseTime,
         endTime
       ];
+
+  PSVLocalTrophyLoaded copyWith(
+      {int currentOrder,
+      String title,
+      bool havePlat,
+      int orgSetCount,
+      int jitter,
+      String trpTrans,
+      List<PSVLocalTrophy> trophies,
+      List<PSVLocalTrophy> searchedTrophies,
+      DateTime baseTime,
+      DateTime endTime}) {
+    return PSVLocalTrophyLoaded(
+        currentOrder: currentOrder ?? this.currentOrder,
+        title: title ?? this.title,
+        havePlat: havePlat ?? this.havePlat,
+        orgSetCount: orgSetCount ?? this.orgSetCount,
+        jitter: jitter ?? this.jitter,
+        trpTrans: trpTrans ?? this.trpTrans,
+        trophies: trophies ?? this.trophies,
+        searchedTrophies: searchedTrophies ?? this.searchedTrophies,
+        baseTime: baseTime ?? this.baseTime,
+        endTime: endTime ?? this.endTime);
+  }
 
   @override
   String toString() => 'PSVLocalTrophyLoaded { '
@@ -252,16 +292,22 @@ class PSVLocalTrophyBloc
       }
     }
 
-    yield PSVLocalTrophyLoaded(
-        currentOrder: stateOld.currentOrder,
-        title: stateOld.title,
-        orgSetCount: stateOld.orgSetCount,
-        havePlat: stateOld.havePlat,
-        jitter: stateOld.jitter,
-        trpTrans: stateOld.trpTrans,
-        trophies: trophies,
-        baseTime: stateOld.baseTime,
-        endTime: stateOld.endTime);
+    final searchedTrophies = stateOld.searchedTrophies.map((trp) {
+      if (trp.id == trophy.id) {
+        return PSVLocalTrophy(
+            id: trophy.id,
+            name: trophy.name,
+            detail: trophy.detail,
+            rarity: trophy.rarity,
+            psnTime1: trophy.psnTime1,
+            psnTime2: trophy.psnTime2);
+      } else {
+        return trp;
+      }
+    }).toList();
+
+    yield (state as PSVLocalTrophyLoaded)
+        .copyWith(trophies: trophies, searchedTrophies: searchedTrophies);
 
     // we sort our trophies if currentOrder is ByTime
     if (stateOld.currentOrder == 1) {
@@ -301,17 +347,7 @@ class PSVLocalTrophyBloc
         break;
     }
 
-    yield PSVLocalTrophyLoaded(
-      currentOrder: currentOrder,
-      title: stateOld.title,
-      orgSetCount: stateOld.orgSetCount,
-      havePlat: stateOld.havePlat,
-      jitter: stateOld.jitter,
-      trpTrans: stateOld.trpTrans,
-      trophies: stateOld.trophies,
-      baseTime: stateOld.baseTime,
-      endTime: stateOld.endTime,
-    );
+    yield stateOld.copyWith(currentOrder: currentOrder);
   }
 
   @override
@@ -330,6 +366,7 @@ class PSVLocalTrophyBloc
           jitter: localJitter ?? event.jitter,
           trpTrans: event.trpTrans,
           trophies: event.trophies,
+          searchedTrophies: [],
           baseTime: localBase ?? PSNTime.baseDateTime(),
           endTime: localEnd);
     }
@@ -350,38 +387,20 @@ class PSVLocalTrophyBloc
       yield* _modifyTrophy(event.trophy);
     }
 
+    if (event is SetSearchedTrophy) {
+      yield (state as PSVLocalTrophyLoaded)
+          .copyWith(searchedTrophies: event.searchedTrophies);
+    }
+
     if (event is SetJitter) {
-      final _state = state as PSVLocalTrophyLoaded;
-
       this.localStorageRepo.setJitter(event.jitter);
-
-      yield PSVLocalTrophyLoaded(
-          currentOrder: _state.currentOrder,
-          title: _state.title,
-          havePlat: _state.havePlat,
-          orgSetCount: _state.orgSetCount,
-          jitter: event.jitter,
-          trpTrans: _state.trpTrans,
-          trophies: _state.trophies,
-          baseTime: _state.baseTime,
-          endTime: _state.endTime);
+      yield (state as PSVLocalTrophyLoaded).copyWith(jitter: event.jitter);
     }
 
     if (event is SetBaseEndDateTime) {
-      final _state = state as PSVLocalTrophyLoaded;
-
       this.localStorageRepo.setRandomRange(base: event.base, end: event.end);
-
-      yield PSVLocalTrophyLoaded(
-          currentOrder: _state.currentOrder,
-          title: _state.title,
-          havePlat: _state.havePlat,
-          orgSetCount: _state.orgSetCount,
-          jitter: _state.jitter,
-          trpTrans: _state.trpTrans,
-          trophies: _state.trophies,
-          baseTime: event.base ?? _state.baseTime,
-          endTime: event.end ?? _state.endTime);
+      yield (state as PSVLocalTrophyLoaded)
+          .copyWith(baseTime: event.base, endTime: event.end);
     }
   }
 }

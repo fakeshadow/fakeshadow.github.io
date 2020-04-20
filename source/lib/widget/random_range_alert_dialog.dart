@@ -42,6 +42,7 @@ class _RandomRangeAlertDialogState extends State<RandomRangeAlertDialog> {
         });
       } else {
         setState(() {
+          editedEnd = true;
           end =
               dateTime.isAfter(base) ? dateTime : base.add(Duration(hours: 24));
         });
@@ -77,7 +78,7 @@ class _RandomRangeAlertDialogState extends State<RandomRangeAlertDialog> {
                 ],
               ),
             ),
-            onTap: () => _pickDateTime(context, true),
+            onTap: () => {_pickDateTime(context, true)},
           ),
           InkWell(
             radius: 5.0,
@@ -112,7 +113,8 @@ class _RandomRangeAlertDialogState extends State<RandomRangeAlertDialog> {
             child: Text(S.of(context).pageEditorFinishAlertFinish),
             color: Colors.blue,
             onPressed: () {
-              bloc.add(SetBaseEndDateTime(base: base, end: end));
+              bloc.add(
+                  SetBaseEndDateTime(base: base, end: editedEnd ? end : null));
               Navigator.of(context).pop();
             })
       ],
