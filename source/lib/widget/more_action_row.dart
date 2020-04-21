@@ -7,6 +7,7 @@ import 'package:psv_trophy_editor/generated/l10n.dart';
 import 'package:psv_trophy_editor/widget/jitter_alert_dialog.dart';
 
 import 'package:psv_trophy_editor/widget/random_range_alert_dialog.dart';
+import 'package:psv_trophy_editor/widget/search_bar.dart';
 
 class MoreActionRow extends StatefulWidget {
   final double padding;
@@ -19,78 +20,17 @@ class MoreActionRow extends StatefulWidget {
 }
 
 class _MoreActionRowState extends State<MoreActionRow> {
-  PSVLocalTrophyBloc bloc;
-
   String dropdownValue;
-  bool showClearButton;
-
-  TextEditingController _controller;
 
   @override
   void initState() {
-    bloc = BlocProvider.of<PSVLocalTrophyBloc>(context);
     dropdownValue = widget.orders[0];
-    _controller = TextEditingController();
-    _controller.text = "";
-    _controller.addListener(_searchListen);
-    showClearButton = false;
     super.initState();
-  }
-
-  void _searchListen() {
-    List<PSVLocalTrophy> trophies;
-
-    if (_controller.text == "") {
-      setState(() {
-        showClearButton = false;
-      });
-      trophies = [];
-    } else {
-      setState(() {
-        showClearButton = true;
-      });
-
-      final text = _controller.text.trimLeft();
-
-      if (text.length > 0) {
-        trophies = (bloc.state as PSVLocalTrophyLoaded)
-            .trophies
-            .where((trp) => trp.name.startsWith(text))
-            .toList();
-      } else {
-        trophies = [];
-      }
-    }
-
-    bloc.add(SetSearchedTrophy(searchedTrophies: trophies));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _clearSearch() {
-    setState(() {
-      _controller.text = "";
-      showClearButton = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<DropdownMenuItem> items = [
-      DropdownMenuItem(
-        child: Text("test"),
-      ),
-      DropdownMenuItem(
-        child: Text("test"),
-      ),
-      DropdownMenuItem(
-        child: Text("test"),
-      ),
-    ];
+    final width = MediaQuery.of(context).size.width;
 
     return Padding(
         padding: EdgeInsets.only(left: widget.padding, right: widget.padding),
@@ -122,27 +62,9 @@ class _MoreActionRowState extends State<MoreActionRow> {
               }).toList(),
             ),
             Container(
-              width: 100,
+              width: width > 500 ? 100 : 1,
             ),
-            Expanded(
-              child: Container(
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                      hintText: "Input trophy name",
-                      border: InputBorder.none,
-                      suffixIcon: showClearButton
-                          ? IconButton(
-                              icon: Icon(Icons.clear),
-                              onPressed: () => _clearSearch())
-                          : Container(
-                              height: 1,
-                              width: 1,
-                            ),
-                      prefixIcon: Icon(Icons.search)),
-                ),
-              ),
-            ),
+            width > 500 ? Expanded(child: SearchBar()) : Spacer(),
             IconButton(
               icon: Icon(Icons.swap_horizontal_circle),
               tooltip: S.of(context).randomDateTimeRangeToolTip,

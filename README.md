@@ -7,7 +7,7 @@ A PSV trophy editor written in Dart using Flutter framework.
 
 ## ToDo:
 - [x] search function
-- [ ] script auto unlock
+- [x] script auto unlock
 - [ ] static analyze trophy time
 - [ ] dynamic analyze trophy order
 - [ ] idiotproof conflict check

@@ -126,10 +126,10 @@ class S {
     );
   }
 
-  String get searchTrophyToolTip {
+  String get searchTrophyHint {
     return Intl.message(
-      'Search trophies in the list',
-      name: 'searchTrophyToolTip',
+      'Input trophy name',
+      name: 'searchTrophyHint',
       desc: '',
       args: [],
     );
@@ -175,6 +175,42 @@ class S {
     return Intl.message(
       'End',
       name: 'randomDateTimeRangeEnd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get advancedPopupMenuToolTip {
+    return Intl.message(
+      'Advanced Features',
+      name: 'advancedPopupMenuToolTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockMenuButton {
+    return Intl.message(
+      'Script Unlock',
+      name: 'scriptUnlockMenuButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get staticAnalyzeMenuButton {
+    return Intl.message(
+      'Static Analyze',
+      name: 'staticAnalyzeMenuButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get dynamicAnalyzeMenuButton {
+    return Intl.message(
+      'Dynamic Analyze',
+      name: 'dynamicAnalyzeMenuButton',
       desc: '',
       args: [],
     );
@@ -373,6 +409,96 @@ class S {
     return Intl.message(
       'Jitter Format Wrong',
       name: 'jitterWrongFormatAlert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualTitle {
+    return Intl.message(
+      'Script use JSON format and file name can be [Anything].json',
+      name: 'scriptUnlockManualTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualExample {
+    return Intl.message(
+      'Example:',
+      name: 'scriptUnlockManualExample',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualHavePlat {
+    return Intl.message(
+      'if the trophy set have platinum trophy',
+      name: 'scriptUnlockManualHavePlat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualId {
+    return Intl.message(
+      'id is the the same order as PSN default and starts from 0.',
+      name: 'scriptUnlockManualId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualRandom {
+    return Intl.message(
+      'time will genearate randomly',
+      name: 'scriptUnlockManualRandom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualRandomBaseEnd {
+    return Intl.message(
+      'if random is used in trophies[i].time then the following two fields are needed',
+      name: 'scriptUnlockManualRandomBaseEnd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualJitter {
+    return Intl.message(
+      'jitter used for set timestamps generation. Unit in microseconds',
+      name: 'scriptUnlockManualJitter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualHide {
+    return Intl.message(
+      'Hide manual',
+      name: 'scriptUnlockManualHide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockManualShow {
+    return Intl.message(
+      'Show manual',
+      name: 'scriptUnlockManualShow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptUnlockSelect {
+    return Intl.message(
+      'Select script',
+      name: 'scriptUnlockSelect',
       desc: '',
       args: [],
     );

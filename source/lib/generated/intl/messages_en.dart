@@ -21,7 +21,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "advancedPopupMenuToolTip" : MessageLookupByLibrary.simpleMessage("Advanced Features"),
     "bronze" : MessageLookupByLibrary.simpleMessage("Bronze"),
+    "dynamicAnalyzeMenuButton" : MessageLookupByLibrary.simpleMessage("Dynamic Analyze"),
     "gold" : MessageLookupByLibrary.simpleMessage("Gold"),
     "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the jitter for generate trophy timestamps"),
     "jitterUnit" : MessageLookupByLibrary.simpleMessage("Unit microseconds"),
@@ -55,8 +57,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "randomDateTimeRangeTimeZoneAlert" : MessageLookupByLibrary.simpleMessage("*.DateTime from picker in your local timezone will be converted and displayed as UTC time."),
     "randomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the range of random DateTime(Only for random trophy time generation)"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("Save Changes"),
-    "searchTrophyToolTip" : MessageLookupByLibrary.simpleMessage("Search trophies in the list"),
+    "scriptUnlockManualExample" : MessageLookupByLibrary.simpleMessage("Example:"),
+    "scriptUnlockManualHavePlat" : MessageLookupByLibrary.simpleMessage("if the trophy set have platinum trophy"),
+    "scriptUnlockManualHide" : MessageLookupByLibrary.simpleMessage("Hide manual"),
+    "scriptUnlockManualId" : MessageLookupByLibrary.simpleMessage("id is the the same order as PSN default and starts from 0."),
+    "scriptUnlockManualJitter" : MessageLookupByLibrary.simpleMessage("jitter used for set timestamps generation. Unit in microseconds"),
+    "scriptUnlockManualRandom" : MessageLookupByLibrary.simpleMessage("time will genearate randomly"),
+    "scriptUnlockManualRandomBaseEnd" : MessageLookupByLibrary.simpleMessage("if random is used in trophies[i].time then the following two fields are needed"),
+    "scriptUnlockManualShow" : MessageLookupByLibrary.simpleMessage("Show manual"),
+    "scriptUnlockManualTitle" : MessageLookupByLibrary.simpleMessage("Script use JSON format and file name can be [Anything].json"),
+    "scriptUnlockMenuButton" : MessageLookupByLibrary.simpleMessage("Script Unlock"),
+    "scriptUnlockSelect" : MessageLookupByLibrary.simpleMessage("Select script"),
+    "searchTrophyHint" : MessageLookupByLibrary.simpleMessage("Input trophy name"),
     "silver" : MessageLookupByLibrary.simpleMessage("Silver"),
+    "staticAnalyzeMenuButton" : MessageLookupByLibrary.simpleMessage("Static Analyze"),
     "titleDefault" : MessageLookupByLibrary.simpleMessage("PSV Trophy Editor"),
     "titleHead" : MessageLookupByLibrary.simpleMessage("Current Editting: "),
     "unobtained" : MessageLookupByLibrary.simpleMessage("Unobtained")

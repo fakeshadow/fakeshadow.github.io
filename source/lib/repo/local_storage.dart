@@ -16,7 +16,13 @@ class LocalStorageRepo {
   }
 
   void setJitter(int jitter) {
-    this.storage.setItem("jitter", jitter);
+    if (jitter != null) {
+      this.storage.setItem("jitter", jitter);
+    }
+  }
+
+  void setShowScriptManual(bool showScriptMenu) {
+    this.storage.setItem("showScriptMenu", showScriptMenu);
   }
 
   void setRandomRange({DateTime base, DateTime end}) {
@@ -39,6 +45,10 @@ class LocalStorageRepo {
 
   Future<int> getLocalJitter() async {
     return await this.storage.getItem("jitter");
+  }
+
+  Future<bool> getLocalShowScriptManual() async {
+    return await this.storage.getItem("showScriptMenu");
   }
 
   Future<DateTime> getLocalBasePSNTime() async {

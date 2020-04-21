@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:psv_trophy_editor/bloc/system.dart';
 import 'package:psv_trophy_editor/generated/l10n.dart';
+import 'package:psv_trophy_editor/widget/advanced_feature_popup_menu.dart';
 import 'package:psv_trophy_editor/widget/finish_edit_alert_dialog.dart';
 import 'package:psv_trophy_editor/widget/more_action_row.dart';
 import 'package:psv_trophy_editor/widget/trophy_list_view.dart';
@@ -26,7 +27,11 @@ class EditorPage extends StatelessWidget {
         return true;
       },
       child: Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            actions: <Widget>[
+              AdvancedFeaturePopup()
+            ],
+          ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: Padding(
             padding:
@@ -55,4 +60,3 @@ class EditorPage extends StatelessWidget {
     );
   }
 }
-

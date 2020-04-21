@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:convert/convert.dart';
 
 import 'package:psv_trophy_editor/bloc/psv_local_trophy.dart';
+import 'package:psv_trophy_editor/model/psv_local.dart';
 import 'package:psv_trophy_editor/util/psn_time.dart';
 
 class PSVFileParser {

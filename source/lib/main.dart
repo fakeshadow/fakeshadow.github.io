@@ -13,17 +13,38 @@ import 'package:psv_trophy_editor/repo/local_storage.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  final repo = LocalStorageRepo.init();
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  LocalStorageRepo repo;
+  SystemBloc systemBloc;
+  PSVLocalTrophyBloc trophyBloc;
+
+  @override
+  void initState() {
+    repo = LocalStorageRepo.init();
+    systemBloc = SystemBloc(repo);
+    trophyBloc = PSVLocalTrophyBloc(repo);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    repo.storage.dispose();
+    systemBloc.close();
+    trophyBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
-    final systemBloc = SystemBloc(repo);
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => systemBloc),
-          BlocProvider(create: (context) => PSVLocalTrophyBloc(repo))
+          BlocProvider(create: (context) => trophyBloc)
         ],
         child: BlocBuilder(
           bloc: systemBloc,

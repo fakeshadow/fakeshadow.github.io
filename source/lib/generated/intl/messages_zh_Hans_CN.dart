@@ -21,7 +21,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "advancedPopupMenuToolTip" : MessageLookupByLibrary.simpleMessage("高级功能"),
     "bronze" : MessageLookupByLibrary.simpleMessage("铜"),
+    "dynamicAnalyzeMenuButton" : MessageLookupByLibrary.simpleMessage("动态分析"),
     "gold" : MessageLookupByLibrary.simpleMessage("金"),
     "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改生成奖杯时间戳的抖动时间范围"),
     "jitterUnit" : MessageLookupByLibrary.simpleMessage("单位微秒"),
@@ -55,8 +57,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "randomDateTimeRangeTimeZoneAlert" : MessageLookupByLibrary.simpleMessage("*.挑选的时间将会从你的本地时区转换为UTC时间并显示"),
     "randomDateTimeRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改随机PSN时间范围(仅用于随机生成奖杯)"),
     "saveChanges" : MessageLookupByLibrary.simpleMessage("保存更改"),
-    "searchTrophyToolTip" : MessageLookupByLibrary.simpleMessage("搜索列表中的奖杯"),
+    "scriptUnlockManualExample" : MessageLookupByLibrary.simpleMessage("例子:"),
+    "scriptUnlockManualHavePlat" : MessageLookupByLibrary.simpleMessage("是否有白金奖杯"),
+    "scriptUnlockManualHide" : MessageLookupByLibrary.simpleMessage("隐藏说明"),
+    "scriptUnlockManualId" : MessageLookupByLibrary.simpleMessage("id从零开始，跟据奖杯列表默认顺序一一对应"),
+    "scriptUnlockManualJitter" : MessageLookupByLibrary.simpleMessage("生成时间戳的抖动，单位微秒"),
+    "scriptUnlockManualRandom" : MessageLookupByLibrary.simpleMessage("时间将随机生成"),
+    "scriptUnlockManualRandomBaseEnd" : MessageLookupByLibrary.simpleMessage("如果在trophies[i].time中使用了时间随机生成，那么以下两列是必需的。对应随机时间的起始和终止范围"),
+    "scriptUnlockManualShow" : MessageLookupByLibrary.simpleMessage("显示说明"),
+    "scriptUnlockManualTitle" : MessageLookupByLibrary.simpleMessage("脚本使用JSON格式， 文件名可以为任意.json"),
+    "scriptUnlockMenuButton" : MessageLookupByLibrary.simpleMessage("脚本解锁"),
+    "scriptUnlockSelect" : MessageLookupByLibrary.simpleMessage("选择脚本"),
+    "searchTrophyHint" : MessageLookupByLibrary.simpleMessage("输入奖杯名称"),
     "silver" : MessageLookupByLibrary.simpleMessage("银"),
+    "staticAnalyzeMenuButton" : MessageLookupByLibrary.simpleMessage("静态分析"),
     "titleDefault" : MessageLookupByLibrary.simpleMessage("PSV奖杯编辑器"),
     "titleHead" : MessageLookupByLibrary.simpleMessage("正在编辑: "),
     "unobtained" : MessageLookupByLibrary.simpleMessage("未获得")

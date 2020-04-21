@@ -68,7 +68,7 @@ class PSNTime {
   PSNTime toPsnTime2(int jitter) {
     var tempDateTime = _toDateTimeSec(this.timeString);
 
-    var newMicros = _toMicro(this.timeString) - jitter;
+    var newMicros = _toMicro(this.timeString) - (jitter ?? 0);
 
     if (newMicros < 0) {
       tempDateTime = tempDateTime.subtract(Duration(seconds: 1));
@@ -210,17 +210,25 @@ class PSNTime {
   }
 
   // generate a PSNTime with randomized sub minutes.
-  static randomPSNTimeSubMin(DateTime begin) {
+  static randomPSNTimeSubMin(DateTime dateTime) {
     final randSecs = Random().nextInt(60);
     final randMicros = Random().nextInt(SecInMicroSecs);
 
-    final newDate = begin.add(Duration(seconds: randSecs));
+    final newDate = dateTime.add(Duration(seconds: randSecs));
 
     return PSNTime(
         timeString: _dateTimeWithoutSubSecs(newDate) +
             _adjustMicrosString(randMicros.toString(), true));
   }
 
+  // generate a PSNTime with randomized sub seconds.
+  static randomPSNTimeSubSec(DateTime dateTime) {
+    final randMicros = Random().nextInt(SecInMicroSecs);
+    return PSNTime(
+        timeString: _dateTimeWithoutSubSecs(dateTime) +
+            _adjustMicrosString(randMicros.toString(), true));
+  }
+  
   static randomPSNTimeFromRange(DateTime begin, DateTime end) {
     final _end = end != null ? end : DateTime.now().toUtc();
 

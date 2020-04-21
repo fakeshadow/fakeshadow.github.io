@@ -4,26 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import 'package:psv_trophy_editor/model/psv_local.dart';
 import 'package:psv_trophy_editor/repo/local_storage.dart';
 import 'package:psv_trophy_editor/util/psn_time.dart';
-
-// trophy model
-class PSVLocalTrophy extends Equatable {
-  final int id;
-  final String name, detail, rarity;
-  final PSNTime psnTime1, psnTime2;
-
-  PSVLocalTrophy(
-      {this.id,
-      this.name,
-      this.detail,
-      this.rarity,
-      this.psnTime1,
-      this.psnTime2});
-
-  @override
-  List<Object> get props => [id, name, detail, rarity, psnTime1, psnTime2];
-}
 
 // events for bloc
 abstract class PSVLocalTrophyEvent extends Equatable {
@@ -78,15 +61,27 @@ class SetTrophy extends PSVLocalTrophyEvent {
 }
 
 class ModifyTrophy extends PSVLocalTrophyEvent {
-  final PSVLocalTrophy trophy;
+  final List<PSVLocalTrophy> trophies;
 
-  const ModifyTrophy({@required this.trophy});
-
-  @override
-  List<Object> get props => [trophy];
+  const ModifyTrophy({@required this.trophies});
 
   @override
-  String toString() => 'ModifyTrophy { trophy: $trophy }';
+  List<Object> get props => [trophies];
+
+  @override
+  String toString() => 'ModifyTrophy { trophies: $trophies }';
+}
+
+class ScriptModifyTrophy extends PSVLocalTrophyEvent {
+  final Script script;
+
+  const ScriptModifyTrophy({@required this.script});
+
+  @override
+  List<Object> get props => [script];
+
+  @override
+  String toString() => 'ScriptModifyTrophy { script: $script }';
 }
 
 class SetBaseEndDateTime extends PSVLocalTrophyEvent {
@@ -172,28 +167,30 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
         endTime
       ];
 
-  PSVLocalTrophyLoaded copyWith(
-      {int currentOrder,
-      String title,
-      bool havePlat,
-      int orgSetCount,
-      int jitter,
-      String trpTrans,
-      List<PSVLocalTrophy> trophies,
-      List<PSVLocalTrophy> searchedTrophies,
-      DateTime baseTime,
-      DateTime endTime}) {
+  PSVLocalTrophyLoaded copyWith({
+    int currentOrder,
+    String title,
+    bool havePlat,
+    int orgSetCount,
+    int jitter,
+    String trpTrans,
+    List<PSVLocalTrophy> trophies,
+    List<PSVLocalTrophy> searchedTrophies,
+    DateTime baseTime,
+    DateTime endTime,
+  }) {
     return PSVLocalTrophyLoaded(
-        currentOrder: currentOrder ?? this.currentOrder,
-        title: title ?? this.title,
-        havePlat: havePlat ?? this.havePlat,
-        orgSetCount: orgSetCount ?? this.orgSetCount,
-        jitter: jitter ?? this.jitter,
-        trpTrans: trpTrans ?? this.trpTrans,
-        trophies: trophies ?? this.trophies,
-        searchedTrophies: searchedTrophies ?? this.searchedTrophies,
-        baseTime: baseTime ?? this.baseTime,
-        endTime: endTime ?? this.endTime);
+      currentOrder: currentOrder ?? this.currentOrder,
+      title: title ?? this.title,
+      havePlat: havePlat ?? this.havePlat,
+      orgSetCount: orgSetCount ?? this.orgSetCount,
+      jitter: jitter ?? this.jitter,
+      trpTrans: trpTrans ?? this.trpTrans,
+      trophies: trophies ?? this.trophies,
+      searchedTrophies: searchedTrophies ?? this.searchedTrophies,
+      baseTime: baseTime ?? this.baseTime,
+      endTime: endTime ?? this.endTime,
+    );
   }
 
   @override
@@ -220,25 +217,24 @@ class PSVLocalTrophyBloc
   PSVLocalTrophyState get initialState => PSVLocalTrophyUninitialized();
 
   // modifyTrophy use a private stream function so that we yield an new state of PSVLocalTrophyLoaded every time.
-  Stream<PSVLocalTrophyLoaded> _modifyTrophy(PSVLocalTrophy trophy) async* {
+  Stream<PSVLocalTrophyLoaded> _modifyTrophy(
+      List<PSVLocalTrophy> trophiesMod) async* {
     final stateOld = state as PSVLocalTrophyLoaded;
 
-    final List<PSVLocalTrophy> trophies = [];
-
-    for (var i = 0; i < stateOld.trophies.length; i++) {
-      final trp = stateOld.trophies[i];
-      if (trp.id == trophy.id) {
-        trophies.add(PSVLocalTrophy(
-            id: trophy.id,
-            name: trophy.name,
-            detail: trophy.detail,
-            rarity: trophy.rarity,
-            psnTime1: trophy.psnTime1,
-            psnTime2: trophy.psnTime2));
+    final trophies = stateOld.trophies.map((trp) {
+      final trophy = trophiesMod.where((trpm) => trpm.id == trp.id).toList();
+      if (trophy.length > 0) {
+        return PSVLocalTrophy(
+            id: trophy[0].id,
+            name: trophy[0].name,
+            detail: trophy[0].detail,
+            rarity: trophy[0].rarity,
+            psnTime1: trophy[0].psnTime1,
+            psnTime2: trophy[0].psnTime2);
       } else {
-        trophies.add(trp);
+        return trp;
       }
-    }
+    }).toList();
 
     // we loop through the trophies unlocked every time the state is updated.
     // if all trophies in base group are unlocked we unlock the plat trophy too using the latest timestamp.
@@ -293,14 +289,15 @@ class PSVLocalTrophyBloc
     }
 
     final searchedTrophies = stateOld.searchedTrophies.map((trp) {
-      if (trp.id == trophy.id) {
+      final trophy = trophiesMod.where((trpm) => trpm.id == trp.id).toList();
+      if (trophy.length > 0) {
         return PSVLocalTrophy(
-            id: trophy.id,
-            name: trophy.name,
-            detail: trophy.detail,
-            rarity: trophy.rarity,
-            psnTime1: trophy.psnTime1,
-            psnTime2: trophy.psnTime2);
+            id: trophy[0].id,
+            name: trophy[0].name,
+            detail: trophy[0].detail,
+            rarity: trophy[0].rarity,
+            psnTime1: trophy[0].psnTime1,
+            psnTime2: trophy[0].psnTime2);
       } else {
         return trp;
       }
@@ -312,6 +309,60 @@ class PSVLocalTrophyBloc
     // we sort our trophies if currentOrder is ByTime
     if (stateOld.currentOrder == 1) {
       this.add(OrderByTime(isLaterFront: true));
+    }
+  }
+
+  // script modify trophies in batch.
+  Stream<PSVLocalTrophyLoaded> _scriptModifyTrophy(Script script) async* {
+    final stateOld = state as PSVLocalTrophyLoaded;
+    final List<PSVLocalTrophy> trophies = [];
+
+    final int jitter = script.jitter ?? stateOld.jitter;
+
+    DateTime base = script.randomTimeBase != null
+        ? DateTime.tryParse(script.randomTimeBase)?.toUtc()
+        : null;
+
+    DateTime end = script.randomTimeEnd != null
+        ? DateTime.tryParse(script.randomTimeEnd)?.toUtc()
+        : null;
+
+    for (final trophyMod in script.trophies) {
+      final trophy =
+          stateOld.trophies.where((trp) => trp.id == trophyMod.id).toList();
+      if (trophy.length > 0) {
+        final dateTime = trophyMod.time != null
+            ? DateTime.tryParse(trophyMod.time)?.toUtc()
+            : null;
+
+        if (dateTime != null) {
+          final PSNTime psnTime1 = PSNTime.randomPSNTimeSubSec(dateTime);
+
+          trophies.add(PSVLocalTrophy(
+              id: trophy[0].id,
+              name: trophy[0].name,
+              detail: trophy[0].detail,
+              rarity: trophy[0].rarity,
+              psnTime1: psnTime1,
+              psnTime2: psnTime1.toPsnTime2(jitter)));
+        } else {
+          if (trophyMod.time == "random" && base != null && end != null) {
+            final PSNTime psnTime1 = PSNTime.randomPSNTimeFromRange(base, end);
+
+            trophies.add(PSVLocalTrophy(
+                id: trophy[0].id,
+                name: trophy[0].name,
+                detail: trophy[0].detail,
+                rarity: trophy[0].rarity,
+                psnTime1: psnTime1,
+                psnTime2: psnTime1.toPsnTime2(jitter)));
+          }
+        }
+      }
+    }
+
+    if (trophies.length > 0) {
+      this.add(ModifyTrophy(trophies: trophies));
     }
   }
 
@@ -399,7 +450,11 @@ class PSVLocalTrophyBloc
     }
 
     if (event is ModifyTrophy) {
-      yield* _modifyTrophy(event.trophy);
+      yield* _modifyTrophy(event.trophies);
+    }
+
+    if (event is ScriptModifyTrophy) {
+      yield* _scriptModifyTrophy(event.script);
     }
 
     if (event is SetSearchedTrophy) {
