@@ -173,12 +173,14 @@ class PSVFileParser {
 
         this.trophies.replaceRange(id, id + 1, [
           PSVLocalTrophy(
-              id: trophy.id,
-              name: trophy.name,
-              detail: trophy.detail,
-              rarity: trophy.rarity,
-              psnTime1: psnTime1,
-              psnTime2: psnTime2)
+            id: trophy.id,
+            name: trophy.name,
+            detail: trophy.detail,
+            rarity: trophy.rarity,
+            psnTime1: psnTime1,
+            psnTime2: psnTime2,
+            flagged: false,
+          )
         ]);
       }
     }

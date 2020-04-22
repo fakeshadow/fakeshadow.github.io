@@ -25,12 +25,13 @@ class LoadSystem extends SystemEvent {
 
 class SetSystem extends SystemEvent {
   final String locale, title;
-  final bool showScriptManual;
+  final bool showScriptManual, showStaticManual;
 
-  const SetSystem({this.locale, this.title, this.showScriptManual});
+  const SetSystem(
+      {this.locale, this.title, this.showScriptManual, this.showStaticManual});
 
   @override
-  List<Object> get props => [locale, title, showScriptManual];
+  List<Object> get props => [locale, title, showScriptManual, showStaticManual];
 }
 
 abstract class SystemState extends Equatable {
@@ -42,16 +43,21 @@ abstract class SystemState extends Equatable {
 
 class HaveSystem extends SystemState {
   final String locale, title;
-  final bool showScriptManual;
+  final bool showScriptManual, showStaticManual;
 
-  const HaveSystem({this.locale, this.title, this.showScriptManual});
+  const HaveSystem({
+    this.locale,
+    this.title,
+    this.showScriptManual,
+    this.showStaticManual,
+  });
 
   @override
-  List<Object> get props => [locale, title, showScriptManual];
+  List<Object> get props => [locale, title, showScriptManual, showStaticManual];
 
   @override
   String toString() =>
-      'HaveSystem { locale: $locale, title: $title, showScriptManual: $showScriptManual }';
+      'HaveSystem { locale: $locale, title: $title, showScriptManual: $showScriptManual, showStaticAnalyzeManual: $showStaticManual }';
 }
 
 class NoSystem extends SystemState {}
@@ -68,7 +74,7 @@ class SystemBloc extends Bloc<SystemEvent, SystemState> {
   Stream<SystemState> mapEventToState(SystemEvent event) async* {
     if (event is LoadSystem) {
       String locale;
-      bool showScriptManual;
+      bool showScriptManual, showStaticManual;
 
       try {
         locale = await this.localStorageRepo.getLocalLocale();
@@ -76,6 +82,10 @@ class SystemBloc extends Bloc<SystemEvent, SystemState> {
       try {
         showScriptManual =
             await this.localStorageRepo.getLocalShowScriptManual();
+      } catch (_) {}
+      try {
+        showStaticManual =
+            await this.localStorageRepo.getLocalShowStaticManual();
       } catch (_) {}
 
       if (locale != null) {
@@ -86,6 +96,7 @@ class SystemBloc extends Bloc<SystemEvent, SystemState> {
         locale: locale,
         title: S.of(event.buildContext).titleDefault,
         showScriptManual: showScriptManual ?? true,
+        showStaticManual: showStaticManual ?? true,
       );
     }
 
@@ -96,12 +107,16 @@ class SystemBloc extends Bloc<SystemEvent, SystemState> {
       if (event.showScriptManual != null) {
         this.localStorageRepo.setShowScriptManual(event.showScriptManual);
       }
+      if (event.showStaticManual != null) {
+        this.localStorageRepo.setShowStaticManual(event.showStaticManual);
+      }
       if (state is HaveSystem) {
+        final s = (state as HaveSystem);
         yield HaveSystem(
-            locale: event.locale ?? (state as HaveSystem).locale,
-            title: event.title ?? (state as HaveSystem).title,
-            showScriptManual: event.showScriptManual ??
-                (state as HaveSystem).showScriptManual);
+            locale: event.locale ?? s.locale,
+            title: event.title ?? s.title,
+            showScriptManual: event.showScriptManual ?? s.showScriptManual,
+            showStaticManual: event.showStaticManual ?? s.showStaticManual);
       } else {
         yield HaveSystem(
             locale: event.locale,

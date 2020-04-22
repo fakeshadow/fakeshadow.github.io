@@ -73,7 +73,7 @@ class ModifyTrophy extends PSVLocalTrophyEvent {
 }
 
 class ScriptModifyTrophy extends PSVLocalTrophyEvent {
-  final Script script;
+  final TrophySetScript script;
 
   const ScriptModifyTrophy({@required this.script});
 
@@ -82,6 +82,18 @@ class ScriptModifyTrophy extends PSVLocalTrophyEvent {
 
   @override
   String toString() => 'ScriptModifyTrophy { script: $script }';
+}
+
+class StaticAnalyzeTrophy extends PSVLocalTrophyEvent {
+  final StaticAnalyzeScript script;
+
+  const StaticAnalyzeTrophy({@required this.script});
+
+  @override
+  List<Object> get props => [script];
+
+  @override
+  String toString() => 'StaticAnalyzeTrophy { script: $script }';
 }
 
 class SetBaseEndDateTime extends PSVLocalTrophyEvent {
@@ -225,12 +237,14 @@ class PSVLocalTrophyBloc
       final trophy = trophiesMod.where((trpm) => trpm.id == trp.id).toList();
       if (trophy.length > 0) {
         return PSVLocalTrophy(
-            id: trophy[0].id,
-            name: trophy[0].name,
-            detail: trophy[0].detail,
-            rarity: trophy[0].rarity,
-            psnTime1: trophy[0].psnTime1,
-            psnTime2: trophy[0].psnTime2);
+          id: trophy[0].id,
+          name: trophy[0].name,
+          detail: trophy[0].detail,
+          rarity: trophy[0].rarity,
+          psnTime1: trophy[0].psnTime1,
+          psnTime2: trophy[0].psnTime2,
+          flagged: trophy[0].flagged,
+        );
       } else {
         return trp;
       }
@@ -273,7 +287,8 @@ class PSVLocalTrophyBloc
                 detail: trp.detail,
                 rarity: trp.rarity,
                 psnTime1: null,
-                psnTime2: null);
+                psnTime2: null,
+                flagged: trp.flagged);
           } else {
             // ToDo: add jitter here as there should be some gap in timestamp between the last trophy timestamp and the plat timestamp
             trophies[i] = PSVLocalTrophy(
@@ -282,7 +297,8 @@ class PSVLocalTrophyBloc
                 detail: trp.detail,
                 rarity: trp.rarity,
                 psnTime1: timeLast1,
-                psnTime2: timeLast2);
+                psnTime2: timeLast2,
+                flagged: trp.flagged);
           }
         }
       }
@@ -292,12 +308,14 @@ class PSVLocalTrophyBloc
       final trophy = trophiesMod.where((trpm) => trpm.id == trp.id).toList();
       if (trophy.length > 0) {
         return PSVLocalTrophy(
-            id: trophy[0].id,
-            name: trophy[0].name,
-            detail: trophy[0].detail,
-            rarity: trophy[0].rarity,
-            psnTime1: trophy[0].psnTime1,
-            psnTime2: trophy[0].psnTime2);
+          id: trophy[0].id,
+          name: trophy[0].name,
+          detail: trophy[0].detail,
+          rarity: trophy[0].rarity,
+          psnTime1: trophy[0].psnTime1,
+          psnTime2: trophy[0].psnTime2,
+          flagged: trophy[0].flagged,
+        );
       } else {
         return trp;
       }
@@ -313,7 +331,8 @@ class PSVLocalTrophyBloc
   }
 
   // script modify trophies in batch.
-  Stream<PSVLocalTrophyLoaded> _scriptModifyTrophy(Script script) async* {
+  Stream<PSVLocalTrophyLoaded> _scriptModifyTrophy(
+      TrophySetScript script) async* {
     final stateOld = state as PSVLocalTrophyLoaded;
     final List<PSVLocalTrophy> trophies = [];
 
@@ -364,6 +383,122 @@ class PSVLocalTrophyBloc
     if (trophies.length > 0) {
       this.add(ModifyTrophy(trophies: trophies));
     }
+  }
+
+  Stream<PSVLocalTrophyLoaded> _staticAnalyzeTrophy(
+      StaticAnalyzeScript script) async* {
+    final List<PSVLocalTrophy> trophies =
+        (state as PSVLocalTrophyLoaded).trophies.map((trophy) {
+      if (trophy.psnTime1 != null && trophy.psnTime2 != null) {
+        for (final range in script.ranges) {
+          // If affectTrophies list is not empty then we skip and do nothing if the trophy is not in the affectTrophies list.
+          final affected = range.affectTrophies;
+          if (!(affected.length > 0 && !affected.contains(trophy.id))) {
+            final begin = DateTime.tryParse(range.begin);
+            final end = DateTime.tryParse(range.end);
+
+            if (begin != null && end != null) {
+              /*
+              We add 120 second on the psnTime and compare it to the begin time.
+              This is to compensate any potential precision lost in DateTime parse.
+              Besides you don't really want to be that close the unobtainable range anyway.
+              We subtract 120 second on the psnTime and compare it to the end time for the same reason.
+            */
+              final isAfterBegin1 = DateTime.parse(trophy.psnTime1.timeString)
+                  .add(Duration(seconds: 120))
+                  .isAfter(begin);
+              final isBeforeEnd1 = DateTime.parse(trophy.psnTime1.timeString)
+                  .subtract(Duration(seconds: 120))
+                  .isBefore(end);
+              final isAfterBegin2 = DateTime.parse(trophy.psnTime2.timeString)
+                  .add(Duration(seconds: 120))
+                  .isAfter(begin);
+              final isBeforeEnd2 = DateTime.parse(trophy.psnTime2.timeString)
+                  .subtract(Duration(seconds: 120))
+                  .isBefore(end);
+
+              if ((isAfterBegin1 && isBeforeEnd1) ||
+                  (isAfterBegin2 && isBeforeEnd2)) {
+                return trophy.copyWith(flagged: true);
+              }
+            }
+          }
+        }
+
+        for (final repeat in script.repeats) {
+          final affected = repeat.affectTrophies;
+          if (!(affected.length > 0 && !affected.contains(trophy.id))) {
+            int weekDay, hour, minute, second, duration;
+
+            if (repeat.weekDay > 0 && repeat.weekDay < 8) {
+              weekDay = repeat.weekDay;
+            }
+            if (repeat.hour >= 0 && repeat.hour < 24) {
+              hour = repeat.hour;
+            }
+            if (repeat.minute >= 0 && repeat.minute < 60) {
+              minute = repeat.minute;
+            }
+            if (repeat.second >= 0 && repeat.second < 60) {
+              second = repeat.second;
+            }
+            if (repeat.duration > 0) {
+              duration = repeat.duration;
+            }
+
+            if (weekDay != null &&
+                hour != null &&
+                minute != null &&
+                second != null &&
+                duration != null) {
+              final psnTime1 = DateTime.parse(trophy.psnTime1.timeString);
+              final psnTime2 = DateTime.parse(trophy.psnTime2.timeString);
+
+              // ToDo: double check this logic.
+              if (psnTime1.weekday == weekDay) {
+                final durBase =
+                    Duration(hours: hour, minutes: minute, seconds: second);
+                final durEnd = durBase + Duration(seconds: duration);
+
+                final dur1 = Duration(
+                    hours: psnTime1.hour,
+                    minutes: psnTime1.minute,
+                    seconds: psnTime1.second);
+                /*
+                We subtract or add 120 seconds Duration for the same reason as how we deal with ranges.
+              */
+                final isAfterBegin1 = dur1 > durBase - Duration(seconds: 120);
+                final isBeforeEnd1 = dur1 < durEnd + Duration(seconds: 120);
+
+                if (isAfterBegin1 && isBeforeEnd1) {
+                  return trophy.copyWith(flagged: true);
+                }
+              }
+
+              if (psnTime2.weekday == weekDay) {
+                final durBase =
+                    Duration(hours: hour, minutes: minute, seconds: second);
+                final durEnd = durBase + Duration(seconds: duration);
+
+                final dur2 = Duration(
+                    hours: psnTime2.hour,
+                    minutes: psnTime2.minute,
+                    seconds: psnTime2.second);
+                final isAfterBegin2 = dur2 > durBase - Duration(seconds: 120);
+                final isBeforeEnd2 = dur2 < durEnd + Duration(seconds: 120);
+
+                if (isAfterBegin2 && isBeforeEnd2) {
+                  return trophy.copyWith(flagged: true);
+                }
+              }
+            }
+          }
+        }
+      }
+      return trophy.copyWith(flagged: false);
+    }).toList();
+
+    this.add(ModifyTrophy(trophies: trophies));
   }
 
   Stream<PSVLocalTrophyLoaded> _sort(Order order, bool isLaterFront) async* {
@@ -455,6 +590,10 @@ class PSVLocalTrophyBloc
 
     if (event is ScriptModifyTrophy) {
       yield* _scriptModifyTrophy(event.script);
+    }
+
+    if (event is StaticAnalyzeTrophy) {
+      yield* _staticAnalyzeTrophy(event.script);
     }
 
     if (event is SetSearchedTrophy) {

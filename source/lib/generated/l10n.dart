@@ -414,24 +414,6 @@ class S {
     );
   }
 
-  String get scriptUnlockManualTitle {
-    return Intl.message(
-      'Script use JSON format and file name can be [Anything].json',
-      name: 'scriptUnlockManualTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  String get scriptUnlockManualExample {
-    return Intl.message(
-      'Example:',
-      name: 'scriptUnlockManualExample',
-      desc: '',
-      args: [],
-    );
-  }
-
   String get scriptUnlockManualHavePlat {
     return Intl.message(
       'if the trophy set have platinum trophy',
@@ -477,28 +459,91 @@ class S {
     );
   }
 
-  String get scriptUnlockManualHide {
+  String get staticAnalyzeRange {
+    return Intl.message(
+      'Ranges of time where trophy can not be obtained',
+      name: 'staticAnalyzeRange',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get staticAnalyzeAffectedTrophies {
+    return Intl.message(
+      'Affected trophies by this time range',
+      name: 'staticAnalyzeAffectedTrophies',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get staticAnalyzeAffectedTrophiesAll {
+    return Intl.message(
+      'No trophies field means this time range affect all trophies in the list',
+      name: 'staticAnalyzeAffectedTrophiesAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get staticAnalyzeRepeat {
+    return Intl.message(
+      'Repeats of time where trophy can not be obtained',
+      name: 'staticAnalyzeRepeat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get staticAnalyzeRepeatExample {
+    return Intl.message(
+      'Every Tuesday from 12am the trophies can not be obtained for 3600 seconds',
+      name: 'staticAnalyzeRepeatExample',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptManualTitle {
+    return Intl.message(
+      'Script use JSON format and file name can be [Anything].json',
+      name: 'scriptManualTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get scriptManualExample {
+    return Intl.message(
+      'Example:',
+      name: 'scriptManualExample',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get manualHide {
     return Intl.message(
       'Hide manual',
-      name: 'scriptUnlockManualHide',
+      name: 'manualHide',
       desc: '',
       args: [],
     );
   }
 
-  String get scriptUnlockManualShow {
+  String get manualShow {
     return Intl.message(
       'Show manual',
-      name: 'scriptUnlockManualShow',
+      name: 'manualShow',
       desc: '',
       args: [],
     );
   }
 
-  String get scriptUnlockSelect {
+  String get scriptSelect {
     return Intl.message(
       'Select script',
-      name: 'scriptUnlockSelect',
+      name: 'scriptSelect',
       desc: '',
       args: [],
     );

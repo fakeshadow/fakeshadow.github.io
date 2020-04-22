@@ -219,80 +219,86 @@ class _TrophyListBuilderState extends State<TrophyListBuilder> {
         final trophy = widget.trophies[index];
         final textColor = _mapColor(trophy.rarity);
         final time = _trophyTime(trophy, context, widget.width);
-        return InkWell(
-          onTap: () {
-            if (!(trophy.id == 0 && widget.state.havePlat == true)) {
-              if (trophy.psnTime1 != null) {
-                _controller.text = trophy.psnTime1.timeString;
-              } else {
-                _controller.text = PSNTime.BaseTimeString;
-              }
-              showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        title: Text(trophy.name,
-                            style: TextStyle(fontSize: 20, color: textColor)),
-                        elevation: 10,
-                        content: TextFormField(
-                          controller: _controller,
-                          autovalidate: true,
-                          validator: (value) {
-                            if (PSNTime().validatePSNTime(value)) {
-                              return "";
-                            } else {
-                              return S.of(context).psnTimeWrongFormatAlert;
-                            }
-                          },
-                        ),
-                        actions: <Widget>[
-                          trophy.psnTime1 != null
-                              ? FlatButton(
-                                  color: Colors.red,
-                                  child:
-                                      Text(S.of(context).pageEditorModifyLock),
-                                  onPressed: () => _lockTrophy(
-                                      context, trophy, widget.state),
-                                )
-                              : Container(),
-                          FlatButton(
-                            color: Colors.blue,
-                            child: Text(S.of(context).pageEditorModifyPick),
-                            onPressed: () => _pickDateTime(),
-                          ),
-                          FlatButton(
-                            color: Colors.blue,
-                            child: Text(S.of(context).pageEditorModifyRandom),
-                            onPressed: () => _rand(widget.state),
-                          ),
-                          FlatButton(
-                            child: Text(S.of(context).pageEditorModifyFinish),
-                            color: Colors.blue,
-                            onLongPress: null,
-                            onPressed: () {
-                              if (isValid) {
-                                _finishEdit(context, trophy, widget.state);
+        final flag = trophy.flagged ?? false;
+        return Container(
+          color: flag ? Colors.red[100] : Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              if (!(trophy.id == 0 && widget.state.havePlat == true)) {
+                if (trophy.psnTime1 != null) {
+                  _controller.text = trophy.psnTime1.timeString;
+                } else {
+                  _controller.text = PSNTime.BaseTimeString;
+                }
+                showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                          title: Text(trophy.name,
+                              style: TextStyle(fontSize: 20, color: textColor)),
+                          elevation: 10,
+                          content: TextFormField(
+                            controller: _controller,
+                            autovalidate: true,
+                            validator: (value) {
+                              if (PSNTime().validatePSNTime(value)) {
+                                return "";
+                              } else {
+                                return S.of(context).psnTimeWrongFormatAlert;
                               }
                             },
-                          )
-                        ],
-                      ));
-            }
-          },
-          hoverColor: Colors.blue,
-          child: widget.width > 500
-              ? ListTile(
-                  leading: Text(_mapRarity(trophy.rarity, context),
-                      style: TextStyle(color: textColor)),
-                  title: Text(trophy.name, style: TextStyle(color: textColor)),
-                  subtitle:
-                      Text(trophy.detail, style: TextStyle(color: textColor)),
-                  trailing: Text(time, style: TextStyle(color: textColor)),
-                  isThreeLine: true,
-                  contentPadding: EdgeInsets.only(top: 1, bottom: 1))
-              : ListTile(
-                  title: Text(trophy.name, style: TextStyle(color: textColor)),
-                  trailing: Text(time, style: TextStyle(color: textColor)),
-                ),
+                          ),
+                          actions: <Widget>[
+                            trophy.psnTime1 != null
+                                ? FlatButton(
+                                    color: Colors.red,
+                                    child: Text(
+                                        S.of(context).pageEditorModifyLock),
+                                    onPressed: () => _lockTrophy(
+                                        context, trophy, widget.state),
+                                  )
+                                : Container(),
+                            FlatButton(
+                              color: Colors.blue,
+                              child: Text(S.of(context).pageEditorModifyPick),
+                              onPressed: () => _pickDateTime(),
+                            ),
+                            FlatButton(
+                              color: Colors.blue,
+                              child: Text(S.of(context).pageEditorModifyRandom),
+                              onPressed: () => _rand(widget.state),
+                            ),
+                            FlatButton(
+                              child: Text(S.of(context).pageEditorModifyFinish),
+                              color: Colors.blue,
+                              onLongPress: null,
+                              onPressed: () {
+                                if (isValid) {
+                                  _finishEdit(context, trophy, widget.state);
+                                }
+                              },
+                            )
+                          ],
+                        ));
+              }
+            },
+            hoverColor: Colors.blue[200],
+            child: widget.width > 500
+                ? ListTile(
+                    leading: Text(_mapRarity(trophy.rarity, context),
+                        style: TextStyle(color: textColor)),
+                    title:
+                        Text(trophy.name, style: TextStyle(color: textColor)),
+                    subtitle:
+                        Text(trophy.detail, style: TextStyle(color: textColor)),
+                    trailing: Text(time, style: TextStyle(color: textColor)),
+                    isThreeLine: true,
+                    contentPadding: EdgeInsets.only(top: 1, bottom: 1))
+                : ListTile(
+                    title:
+                        Text(trophy.name, style: TextStyle(color: textColor)),
+                    trailing: Text(time, style: TextStyle(color: textColor)),
+                  ),
+          ),
         );
       },
     );

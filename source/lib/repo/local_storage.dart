@@ -25,6 +25,10 @@ class LocalStorageRepo {
     this.storage.setItem("showScriptMenu", showScriptMenu);
   }
 
+  void setShowStaticManual(bool showScriptMenu) {
+    this.storage.setItem("showStaticMenu", showScriptMenu);
+  }
+
   void setRandomRange({DateTime base, DateTime end}) {
     if (base != null) {
       this.storage.setItem("baseDateTime", base.toString());
@@ -49,6 +53,10 @@ class LocalStorageRepo {
 
   Future<bool> getLocalShowScriptManual() async {
     return await this.storage.getItem("showScriptMenu");
+  }
+
+  Future<bool> getLocalShowStaticManual() async {
+    return await this.storage.getItem("showStaticMenu");
   }
 
   Future<DateTime> getLocalBasePSNTime() async {
