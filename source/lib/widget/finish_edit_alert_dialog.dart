@@ -16,12 +16,21 @@ class FinishAlertDialog extends StatelessWidget {
   void _saveFile(BuildContext context) {
     final state = BlocProvider.of<PSVLocalTrophyBloc>(context).state
         as PSVLocalTrophyLoaded;
-    final trans = PSVFileParser.fromBlocState(state).modifyTrans();
+    final PSVFileParser parser = PSVFileParser.fromBlocState(state);
+
+    final trans = parser.modifyTrans();
+    final title = parser.modifyTitle();
 
     final content = base64Encode(trans);
     final _anchor = html.AnchorElement(
         href: "data:application/octet-stream;charset=utf-16le;base64,$content")
       ..setAttribute("download", "TRPTRANS_MOD.DAT")
+      ..click();
+
+    final content2 = base64Encode(title);
+    final _anchor2 = html.AnchorElement(
+        href: "data:application/octet-stream;charset=utf-16le;base64,$content2")
+      ..setAttribute("download", "TRPTITLE_MOD.DAT")
       ..click();
   }
 

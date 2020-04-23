@@ -41,20 +41,22 @@ class OrderByTime extends PSVLocalTrophyEvent {
 class SetTrophy extends PSVLocalTrophyEvent {
   final int orgSetCount, jitter;
   final bool havePlat;
-  final String title, trpTrans;
+  final String title, trpTrans, trpTitle;
   final List<PSVLocalTrophy> trophies;
 
-  const SetTrophy(
-      {@required this.title,
-      this.havePlat,
-      this.orgSetCount,
-      this.jitter, // jitter is the time gap between two timestamps of one trophy.
-      this.trpTrans,
-      this.trophies});
+  const SetTrophy({
+    @required this.title,
+    this.havePlat,
+    this.orgSetCount,
+    this.jitter, // jitter is the time gap between two timestamps of one trophy.
+    this.trpTrans,
+    this.trpTitle,
+    this.trophies,
+  });
 
   @override
   List<Object> get props =>
-      [title, havePlat, orgSetCount, jitter, trpTrans, trophies];
+      [title, havePlat, orgSetCount, jitter, trpTrans, trpTitle, trophies];
 
   @override
   String toString() => 'SetTrophy { title: $title }';
@@ -148,22 +150,24 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
       jitter,
       currentOrder; // currentOrder : 0 == ByPSN; 1 == ByTime
   final bool havePlat;
-  final String title, trpTrans;
+  final String title, trpTrans, trpTitle;
   final List<PSVLocalTrophy> trophies;
   final List<PSVLocalTrophy> searchedTrophies;
   final DateTime baseTime, endTime;
 
-  const PSVLocalTrophyLoaded(
-      {this.currentOrder,
-      this.title,
-      this.havePlat,
-      this.orgSetCount,
-      this.jitter,
-      this.trpTrans,
-      this.trophies,
-      this.searchedTrophies,
-      this.baseTime,
-      this.endTime});
+  const PSVLocalTrophyLoaded({
+    this.currentOrder,
+    this.title,
+    this.havePlat,
+    this.orgSetCount,
+    this.jitter,
+    this.trpTrans,
+    this.trpTitle,
+    this.trophies,
+    this.searchedTrophies,
+    this.baseTime,
+    this.endTime,
+  });
 
   @override
   List<Object> get props => [
@@ -173,6 +177,7 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
         orgSetCount,
         jitter,
         trpTrans,
+        trpTitle,
         trophies,
         searchedTrophies,
         baseTime,
@@ -186,6 +191,7 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
     int orgSetCount,
     int jitter,
     String trpTrans,
+    String trpTitle,
     List<PSVLocalTrophy> trophies,
     List<PSVLocalTrophy> searchedTrophies,
     DateTime baseTime,
@@ -198,6 +204,7 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
       orgSetCount: orgSetCount ?? this.orgSetCount,
       jitter: jitter ?? this.jitter,
       trpTrans: trpTrans ?? this.trpTrans,
+      trpTitle: trpTitle ?? this.trpTitle,
       trophies: trophies ?? this.trophies,
       searchedTrophies: searchedTrophies ?? this.searchedTrophies,
       baseTime: baseTime ?? this.baseTime,
@@ -211,7 +218,6 @@ class PSVLocalTrophyLoaded extends PSVLocalTrophyState {
       'title: $title, '
       'havePlat: $havePlat, '
       'orgSetCount: $orgSetCount, '
-//      'trpTrans: $trpTrans, '
       'trophies: $trophies, '
       'baseTime: $baseTime, '
       'endTime: $endTime '
@@ -566,6 +572,7 @@ class PSVLocalTrophyBloc
           orgSetCount: event.orgSetCount,
           jitter: localJitter ?? event.jitter,
           trpTrans: event.trpTrans,
+          trpTitle: event.trpTitle,
           trophies: event.trophies,
           searchedTrophies: [],
           baseTime: localBase ?? PSNTime.baseDateTime(),

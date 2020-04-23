@@ -6,43 +6,173 @@ import 'package:psv_trophy_editor/model/psv_local.dart';
 import 'package:psv_trophy_editor/util/psn_time.dart';
 
 class PSVFileParser {
-  final String npCommId, title, trpTrans;
+  final String npCommId, title, trpTrans, trpTitle;
   final int orgSetCount, jitter;
   final bool havePlat;
   final List<PSVLocalTrophy> trophies;
 
-  PSVFileParser(
-      {this.npCommId,
-      this.title,
-      this.orgSetCount,
-      this.havePlat,
-      this.trophies,
-      this.trpTrans,
-      this.jitter});
+  PSVFileParser({
+    this.npCommId,
+    this.title,
+    this.orgSetCount,
+    this.havePlat,
+    this.trophies,
+    this.trpTrans,
+    this.trpTitle,
+    this.jitter,
+  });
 
-  // all offsets are applied to hex string. So it's the actual hex offset * 2
-  static const int npCommIdOff = 736;
-
-  static const int lockOff = 1774;
-  static const String locked = "00";
-  static const String unlocked = "02";
-
-  static const int trpIdOff = 1830;
-  static const int rarityOff = 1838;
-
-  static const int syncedOff = 1844;
-
-  // ToDo: investigate the accurate synced string code
-  static const String synced = "40";
-  static const String unSynced = "20";
-
-  static const int timeStamp1Off = 1856;
-  static const int timeStamp2Off = 1872;
   static const String baseTimeStamp = "0000000000000000";
   static const int timeStampLen = 16;
 
-  // one trophy takes 176 bytes.
-  static const int trpGap = 352;
+  // all offsets are applied to hex string. So it's the actual hex offset * 2
+  static const int npCommIdOffTrans = 736;
+
+  static const int lockOffTrans = 1774;
+  static const String lockedTrans = "00";
+  static const String unlockedTrans = "02";
+
+  static const int syncOffTrans = 1782;
+  static const String unSyncedTrans = "00";
+  static const String syncedTrans = "01";
+
+  static const int trpIdOffTrans = 1830;
+  static const int rarityOffTrans = 1838;
+
+  static const int lockOff2Trans = 1844;
+  static const String locked2Trans = "00";
+  static const String unlocked2Trans = "20";
+
+  static const int timeStamp1OffTrans = 1856;
+  static const int timeStamp2OffTrains = 1872;
+
+  // one trophy in TRPTRANS takes 176 bytes.
+  static const int trpGapTrans = 352;
+
+  // marker of where we start to edit TRPTITLE.DAT.
+  static const String trpTitleMarker = "00000800000000500000000000000000";
+
+  // percentage offset is before the marker offset.
+  static const int percentageOffTitle = -576;
+  // percentage offset 2 is before the marker offset.
+  static const int percentage2OffTitle = -800;
+
+  // all offset in TRPTITLE.DAT are relative to the marker offset.
+  static const int trpIdOffTitle = 36;
+
+  static const int lockOffTitle = 46;
+  static const String lockedTitle = "00";
+  static const String unlockedTitle = "01";
+
+  static const int syncedOffTitle = 52;
+  static const String syncNoStateTitle = "00";
+
+//  static const String syncedTitle = "40";
+  static const String unSyncedTitle = "20";
+
+  static const int timeStamp1OffTitle = 64;
+  static const int timeStamp2OffTitle = 80;
+
+  // one trophy in TRPTITLE takes 96 bytes.
+  static const int trpGapTitle = 192;
+
+  List<int> modifyTitle() {
+    String trpTitle = this.trpTitle;
+
+    final int marker = this.trpTitle.indexOf(trpTitleMarker);
+    int percentage = 0;
+
+    for (final trophy in this.trophies) {
+      if (trophy.psnTime1 == null && trophy.psnTime2 == null) {
+        trpTitle = _clearTrophyTitle(trpTitle, trophy.id, marker);
+      } else {
+        trpTitle = _writeTrophyTitle(trpTitle, trophy, marker);
+        percentage += _bitShiftInInt(trophy.id);
+      }
+    }
+
+    trpTitle = _writePercentage(trpTitle, percentage, marker);
+
+    return hex.decode(trpTitle);
+  }
+
+  String _writePercentage(String trpTitle, int percent, int marker) {
+    String string = percent.toRadixString(16);
+    for (int i = string.length; i < 10; i++) {
+      string = "0" + string;
+    }
+
+    String stringNew = "";
+    for (int i = string.length - 2; i >= 0; i = i - 2) {
+      stringNew = stringNew + string.substring(i, i + 2);
+    }
+
+    final int _percentOff = marker + percentageOffTitle;
+    final int _percent2Off = marker + percentage2OffTitle;
+
+    trpTitle = trpTitle.replaceRange(_percent2Off, _percent2Off + 10, stringNew);
+    trpTitle = trpTitle.replaceRange(_percentOff, _percentOff + 10, stringNew);
+
+    return trpTitle;
+  }
+
+  int _bitShiftInInt(int trophyId) {
+    return 1 << trophyId;
+  }
+
+  String _clearTrophyTitle(String trpTitle, int trophyId, int marker) {
+    final gap = trophyId * trpGapTitle;
+    final _lockOff = marker + gap + lockOffTitle;
+    final _syncOff = marker + gap + syncedOffTitle;
+    final _timeStamp1Off = marker + gap + timeStamp1OffTitle;
+    final _timeStamp2Off = marker + gap + timeStamp2OffTitle;
+
+    // clear lock state;
+    trpTitle = trpTitle.replaceRange(_lockOff, _lockOff + 2, lockedTitle);
+
+    // clear sync state;
+    trpTitle = trpTitle.replaceRange(_syncOff, _syncOff + 2, syncNoStateTitle);
+
+    // clear timestamp;
+    trpTitle = trpTitle.replaceRange(
+        _timeStamp1Off, _timeStamp1Off + timeStampLen, baseTimeStamp);
+    trpTitle = trpTitle.replaceRange(
+        _timeStamp2Off, _timeStamp2Off + timeStampLen, baseTimeStamp);
+
+    return trpTitle;
+  }
+
+  String _writeTrophyTitle(String trpTitle, PSVLocalTrophy trophy, int marker) {
+    final gap = trophy.id * trpGapTitle;
+    final _lockOff = marker + gap + lockOffTitle;
+    final _syncOff = marker + gap + syncedOffTitle;
+    final _timeStamp1Off = marker + gap + timeStamp1OffTitle;
+    final _timeStamp2Off = marker + gap + timeStamp2OffTitle;
+
+    // write lock state;
+    trpTitle = trpTitle.replaceRange(_lockOff, _lockOff + 2, unlockedTitle);
+
+    // write sync state in hex;
+    trpTitle = trpTitle.replaceRange(_syncOff, _syncOff + 2, unSyncedTitle);
+
+    // write timestamp in hex;
+    var _timeStamp1 = trophy.psnTime1.microsSinceBaseTime().toRadixString(16);
+    var _timeStamp2 = trophy.psnTime2.microsSinceBaseTime().toRadixString(16);
+
+    while (_timeStamp1.length < timeStampLen) {
+      _timeStamp1 = "0" + _timeStamp1;
+    }
+    while (_timeStamp2.length < timeStampLen) {
+      _timeStamp2 = "0" + _timeStamp2;
+    }
+
+    trpTitle = trpTitle.replaceRange(
+        _timeStamp1Off, _timeStamp1Off + timeStampLen, _timeStamp1);
+    trpTitle = trpTitle.replaceRange(
+        _timeStamp2Off, _timeStamp2Off + timeStampLen, _timeStamp2);
+
+    return trpTitle;
+  }
 
   static fromBlocState(PSVLocalTrophyLoaded state) {
     return PSVFileParser(
@@ -51,6 +181,7 @@ class PSVFileParser {
       havePlat: state.havePlat,
       trophies: state.trophies,
       trpTrans: state.trpTrans,
+      trpTitle: state.trpTitle,
       jitter: state.jitter,
     );
   }
@@ -116,12 +247,16 @@ class PSVFileParser {
         trophies: trophies);
   }
 
+  static String parseTrpTitle(List<int> bytebuffer) {
+    return hex.encode(bytebuffer);
+  }
+
   PSVFileParser parseTRANS(List<int> bytebuffer) {
     final trpTrans = hex.encode(bytebuffer);
 
     // np comm id(trophy set id) is 12 bytes long and since we use string to represent the hex data so it needs to multiply by 2.
-    final _npCommId = ascii
-        .decode(hex.decode(trpTrans.substring(npCommIdOff, npCommIdOff + 24)));
+    final _npCommId = ascii.decode(hex
+        .decode(trpTrans.substring(npCommIdOffTrans, npCommIdOffTrans + 24)));
 
     if (this.npCommId != _npCommId) {
       // ToDo: throw error here;
@@ -132,7 +267,7 @@ class PSVFileParser {
 
     for (var i = 0; i < 255; i++) {
       // trophy id is 2 bytes.
-      final _idOff = trpIdOff + trpGap * i;
+      final _idOff = trpIdOffTrans + trpGapTrans * i;
       final trpId = trpTrans.substring(_idOff, _idOff + 2);
       /*
             trophy rarity is 1 byte.
@@ -142,7 +277,7 @@ class PSVFileParser {
             02            gold    G
             01            plat    P
           */
-      final _rarityOff = rarityOff + trpGap * i;
+      final _rarityOff = rarityOffTrans + trpGapTrans * i;
       final rarity = trpTrans.substring(_rarityOff, _rarityOff + 2);
 
       /*
@@ -153,8 +288,8 @@ class PSVFileParser {
             Some of my personal recorded time gap:
               . timestamp_latter - timestamp_first = 2764 microsecond (2.764ms)
       */
-      final _timeStamp1Off = timeStamp1Off + trpGap * i;
-      final _timeStamp2Off = timeStamp2Off + trpGap * i;
+      final _timeStamp1Off = timeStamp1OffTrans + trpGapTrans * i;
+      final _timeStamp2Off = timeStamp2OffTrains + trpGapTrans * i;
       final timeStamp1 =
           trpTrans.substring(_timeStamp1Off, _timeStamp1Off + timeStampLen);
       final timeStamp2 =
@@ -207,7 +342,7 @@ class PSVFileParser {
 
     final length = this.trophies.length;
     for (var i = 0; i < length; i++) {
-      transNew = _clearTrophy(transNew, this.trophies[i].id, length);
+      transNew = _clearTrophyTrans(transNew, this.trophies[i].id, length);
     }
 
     // sort trophies from early to late order.
@@ -223,7 +358,7 @@ class PSVFileParser {
     for (var i = 0; i < length; i++) {
       final trophy = this.trophies[i];
       if (trophy.psnTime1 != null) {
-        transNew = _writeTrophy(transNew, trophy, transIndex);
+        transNew = _writeTrophyTrans(transNew, trophy, transIndex);
         transIndex += 1;
       }
     }
@@ -231,22 +366,21 @@ class PSVFileParser {
     return hex.decode(transNew);
   }
 
-  String _clearTrophy(String trpTrans, int trophyId, int length) {
+  String _clearTrophyTrans(String trpTrans, int trophyId, int length) {
     for (var index = 0; index < length; index++) {
-      final _trpIdOff = trpIdOff + trpGap * index;
-      final _rarityOff = rarityOff + trpGap * index;
-      final _timeStamp1Off = timeStamp1Off + trpGap * index;
-      final _timeStamp2Off = timeStamp2Off + trpGap * index;
-      final _syncOff = syncedOff + trpGap * index;
+      final int gap = trpGapTrans * index;
+      final _trpIdOff = trpIdOffTrans + gap;
+      final _rarityOff = rarityOffTrans + gap;
+      final _syncOff = syncOffTrans + gap;
+      final _timeStamp1Off = timeStamp1OffTrans + gap;
+      final _timeStamp2Off = timeStamp2OffTrains + gap;
+      final _lock = lockOffTrans + gap;
+      final _lock2 = lockOff2Trans + gap;
 
       final trpId = trpTrans.substring(_trpIdOff, _trpIdOff + 2);
       final _trpId = int.parse(trpId, radix: 16);
 
       if (trophyId == _trpId) {
-        // clear lock state;
-        trpTrans = trpTrans.replaceRange(
-            lockOff + trpGap * index, lockOff + trpGap * index + 2, locked);
-
         // clear trophy id;
         trpTrans = trpTrans.replaceRange(_trpIdOff, _trpIdOff + 2, "00");
 
@@ -254,7 +388,13 @@ class PSVFileParser {
         trpTrans = trpTrans.replaceRange(_rarityOff, _rarityOff + 2, "00");
 
         // clear sync state;
-        trpTrans = trpTrans.replaceRange(_syncOff, _syncOff + 2, "00");
+        trpTrans = trpTrans.replaceRange(_syncOff, _syncOff + 2, unSyncedTrans);
+
+        // clear lock state;
+        trpTrans = trpTrans.replaceRange(_lock, _lock + 2, lockedTrans);
+
+        // clear lock 2 state;
+        trpTrans = trpTrans.replaceRange(_lock2, _lock2 + 2, locked2Trans);
 
         // clear timestamp;
         trpTrans = trpTrans.replaceRange(
@@ -267,28 +407,29 @@ class PSVFileParser {
     return trpTrans;
   }
 
-  String _writeTrophy(String trpTrans, PSVLocalTrophy trophy, int index) {
-    final _trpIdOff = trpIdOff + trpGap * index;
-    final _rarityOff = rarityOff + trpGap * index;
-    final _timeStamp1Off = timeStamp1Off + trpGap * index;
-    final _timeStamp2Off = timeStamp2Off + trpGap * index;
-    final _syncOff = syncedOff + trpGap * index;
-
-    // write lock state;
-    trpTrans = trpTrans.replaceRange(
-        lockOff + trpGap * index, lockOff + trpGap * index + 2, unlocked);
+  String _writeTrophyTrans(String trpTrans, PSVLocalTrophy trophy, int index) {
+    final gap = trpGapTrans * index;
+    final _trpIdOff = trpIdOffTrans + gap;
+    final _rarityOff = rarityOffTrans + gap;
+    final _timeStamp1Off = timeStamp1OffTrans + gap;
+    final _timeStamp2Off = timeStamp2OffTrains + gap;
+    final _lockOff = lockOffTrans + gap;
+    final _lock2Off = lockOff2Trans + gap;
 
     // write trophy id in hex;
-    var _id = trophy.id.toRadixString(16);
+    String _id = trophy.id.toRadixString(16);
     _id = _id.length < 2 ? "0" + _id : _id;
     trpTrans = trpTrans.replaceRange(_trpIdOff, _trpIdOff + 2, _id);
 
-    // write trophy id in hex;
+    // write rarity id in hex;
     final _rarity = _mapRarity(trophy.rarity);
     trpTrans = trpTrans.replaceRange(_rarityOff, _rarityOff + 2, _rarity);
 
-    // write sync state in hex;
-    trpTrans = trpTrans.replaceRange(_syncOff, _syncOff + 2, unSynced);
+    // write lock state;
+    trpTrans = trpTrans.replaceRange(_lockOff, _lockOff + 2, unlockedTrans);
+
+    // write lock2 state in hex;
+    trpTrans = trpTrans.replaceRange(_lock2Off, _lock2Off + 2, unlocked2Trans);
 
     // write timestamp in hex;
     var _timeStamp1 = trophy.psnTime1.microsSinceBaseTime().toRadixString(16);
@@ -315,13 +456,13 @@ class PSVFileParser {
         return "04";
         break;
       case ("S"):
-        return "04";
+        return "03";
         break;
       case ("G"):
-        return "04";
+        return "02";
         break;
       case ("P"):
-        return "04";
+        return "01";
         break;
       default:
         return "04";

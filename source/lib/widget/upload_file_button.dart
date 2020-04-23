@@ -22,24 +22,39 @@ class UploadFileButton extends StatelessWidget {
     uploadInput.click();
 
     uploadInput.onChange.listen((e) {
-      if (uploadInput.files.length != 2) {
+      if (uploadInput.files.length != 3) {
         return;
       }
       final file1 = uploadInput.files[0];
       final file2 = uploadInput.files[1];
+      final file3 = uploadInput.files[2];
 
-      if (file1.name == "TROP.SFM" && file2.name == "TRPTRANS.DAT") {
-        _handleFile(file1, file2, bloc, context);
-      } else if (file2.name == "TROP.SFM" && file1.name == "TRPTRANS.DAT") {
-        _handleFile(file2, file1, bloc, context);
+      final files = [file1, file2, file3];
+      final names = [file1.name, file2.name, file3.name];
+
+      if (names.contains("TROP.SFM") &&
+          names.contains("TRPTRANS.DAT") &&
+          names.contains("TRPTITLE.DAT")) {
+        _handleFile(
+            files[names.indexOf("TROP.SFM")],
+            files[names.indexOf("TRPTRANS.DAT")],
+            files[names.indexOf("TRPTITLE.DAT")],
+            bloc,
+            context);
       } else {
+        // ToDo: give error to user.
         return print("something went wrong");
       }
     });
   }
 
-  void _handleFile(html.File sfm, html.File trans, PSVLocalTrophyBloc bloc,
-      BuildContext context) {
+  void _handleFile(
+    html.File sfm,
+    html.File trans,
+    html.File trpTitle,
+    PSVLocalTrophyBloc bloc,
+    BuildContext context,
+  ) {
     final reader = new html.FileReader();
     reader.readAsText(sfm);
     reader.onLoadEnd.listen((e) {
@@ -51,19 +66,26 @@ class UploadFileButton extends StatelessWidget {
       reader2.onLoadEnd.listen((e) {
         final PSVFileParser parser2 = parser.parseTRANS(reader2.result);
 
-        bloc.add(SetTrophy(
+        final reader3 = new html.FileReader();
+        reader3.readAsArrayBuffer(trpTitle);
+        reader3.onLoadEnd.listen((e) {
+          final String trpTitle = PSVFileParser.parseTrpTitle(reader3.result);
+
+          bloc.add(SetTrophy(
             title: parser2.title,
             havePlat: parser2.havePlat,
             orgSetCount: parser2.orgSetCount,
             jitter: parser2.jitter,
             trpTrans: parser2.trpTrans,
-            trophies: parser2.trophies));
+            trpTitle: trpTitle,
+            trophies: parser2.trophies,
+          ));
 
-        final title = S.of(context).titleHead + parser2.title;
+          final title = S.of(context).titleHead + parser2.title;
 
-        BlocProvider.of<SystemBloc>(context).add(SetSystem(title: title));
-
-        Navigator.of(context).pushNamed("editor");
+          BlocProvider.of<SystemBloc>(context).add(SetSystem(title: title));
+          Navigator.of(context).pushNamed("editor");
+        });
       });
     });
   }

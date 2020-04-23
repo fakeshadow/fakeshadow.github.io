@@ -272,7 +272,7 @@ class S {
 
   String get pageHomeFilesDetail {
     return Intl.message(
-      'ur0:/user/xx/trophy/conf/NPWRXXXXX_00/TROP.SFM\nur0:/user/xx/trophy/data/NPWRXXXXX_00/TRPTRANS.DAT\nTransfer them to your PC/Phone using vitashell or other file manager homebrew\n',
+      'ur0:/user/xx/trophy/conf/NPWRXXXXX_00/TROP.SFM\nur0:/user/xx/trophy/data/NPWRXXXXX_00/TRPTRANS.DAT\nur0:/user/xx/trophy/data/NPWRXXXXX_00/TRPTITLE.DAT\nTransfer them to your PC/Phone using vitashell or other file manager homebrew\n',
       name: 'pageHomeFilesDetail',
       desc: '',
       args: [],
@@ -281,7 +281,7 @@ class S {
 
   String get pageHomeAlert {
     return Intl.message(
-      '*.TRPTRANS.DAT must be in the decrypted form before transfer:',
+      '*.TRPTRANS.DAT and TRPTITLE.DAT must be in the decrypted form before transfer:',
       name: 'pageHomeAlert',
       desc: '',
       args: [],
@@ -290,7 +290,7 @@ class S {
 
   String get pageHomeAlertDetail {
     return Intl.message(
-      '1. Navigate to ur0:/user/xx/trophy/data/ folder using vitashell.\n2. Select NPWRXXXXX_00 folder and press triangle button, then choose Open decrypted and confirm\n3. Transfer decrypted TRPTRANS.DAT inside the folder\n',
+      '1. Navigate to ur0:/user/xx/trophy/data/ folder using vitashell.\n2. Select NPWRXXXXX_00 folder and press triangle button, then choose Open decrypted and confirm\n3. Transfer decrypted TRPTRANS.DAT and TRPTITLE.DAT inside the folder\n',
       name: 'pageHomeAlertDetail',
       desc: '',
       args: [],
@@ -380,7 +380,7 @@ class S {
 
   String get pageEditorFinishAlertDetail {
     return Intl.message(
-      'All changes have been saved. Press Finish button to download TRPTRANS_MOD.DAT\n*.Rename TRPTRANS_MOD.DAT to TRPTRANS.DAT, transfer back to Vita and overwrite the original one(Be sure to decrypt the original file before overwrite)',
+      'All changes have been saved. Press Finish button to download TRPTRANS_MOD.DAT and TRPTITLE_MOD.DAT\n*.Rename them to TRPTRANS.DAT and TRPTITLE.DAT ,transfer back to Vita and overwrite the original ones(Be sure to decrypt the original files before overwrite)',
       name: 'pageEditorFinishAlertDetail',
       desc: '',
       args: [],

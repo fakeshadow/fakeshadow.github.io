@@ -24,7 +24,7 @@ const RESOURCES = {
 "assets/packages/flutter_icons/fonts/Entypo.ttf": "744ce60078c17d86006dd0edabcd59a7",
 "assets/packages/flutter_icons/fonts/FontAwesome5_Regular.ttf": "f6c6f6c8cb7784254ad00056f6fbd74e",
 "manifest.json": "a61d1c58343dddcefd141e0224722130",
-"main.dart.js": "a7f269840dc8a83ca19592452bbb9497",
+"main.dart.js": "ae49cae79fc60963415dd33f26df3b4c",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1"
