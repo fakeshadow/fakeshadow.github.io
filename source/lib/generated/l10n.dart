@@ -27,6 +27,24 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  String get sourceCode {
+    return Intl.message(
+      'Source code',
+      name: 'sourceCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get discordGroup {
+    return Intl.message(
+      'Discord group',
+      name: 'discordGroup',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get titleDefault {
     return Intl.message(
       'PSV Trophy Editor',

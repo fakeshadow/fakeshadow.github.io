@@ -23,6 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "advancedPopupMenuToolTip" : MessageLookupByLibrary.simpleMessage("Advanced Features"),
     "bronze" : MessageLookupByLibrary.simpleMessage("Bronze"),
+    "discordGroup" : MessageLookupByLibrary.simpleMessage("Discord group"),
     "dynamicAnalyzeMenuButton" : MessageLookupByLibrary.simpleMessage("Dynamic Analyze"),
     "gold" : MessageLookupByLibrary.simpleMessage("Gold"),
     "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("Change the jitter for generate trophy timestamps"),
@@ -70,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "scriptUnlockMenuButton" : MessageLookupByLibrary.simpleMessage("Script Unlock"),
     "searchTrophyHint" : MessageLookupByLibrary.simpleMessage("Input trophy name"),
     "silver" : MessageLookupByLibrary.simpleMessage("Silver"),
+    "sourceCode" : MessageLookupByLibrary.simpleMessage("Source code"),
     "staticAnalyzeAffectedTrophies" : MessageLookupByLibrary.simpleMessage("Affected trophies by this time range"),
     "staticAnalyzeAffectedTrophiesAll" : MessageLookupByLibrary.simpleMessage("No trophies field means this time range affect all trophies in the list"),
     "staticAnalyzeMenuButton" : MessageLookupByLibrary.simpleMessage("Static Analyze"),

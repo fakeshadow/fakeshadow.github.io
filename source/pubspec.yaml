@@ -19,6 +19,7 @@ dependencies:
   flutter_bloc: ^3.2.0
   equatable: ^1.0.0
   localstorage: ^3.0.1+4
+  flutter_icons: ^1.1.0
 
 dev_dependencies:
   flutter_test:

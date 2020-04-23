@@ -1,4 +1,6 @@
 {
+  "sourceCode": "Source code",
+  "discordGroup": "Discord group",
   "titleDefault": "PSV Trophy Editor",
   "titleHead": "Current Editting: ",
   "jitterUnit": "Unit microseconds",

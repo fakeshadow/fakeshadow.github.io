@@ -1,4 +1,6 @@
 {
+  "sourceCode": "源代码",
+  "discordGroup": "Discord讨论组",
   "titleDefault": "PSV奖杯编辑器",
   "titleHead": "正在编辑: ",
   "jitterUnit": "单位微秒",

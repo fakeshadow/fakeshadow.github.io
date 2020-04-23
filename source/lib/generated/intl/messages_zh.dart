@@ -23,6 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "advancedPopupMenuToolTip" : MessageLookupByLibrary.simpleMessage("高级功能"),
     "bronze" : MessageLookupByLibrary.simpleMessage("铜"),
+    "discordGroup" : MessageLookupByLibrary.simpleMessage("Discord讨论组"),
     "dynamicAnalyzeMenuButton" : MessageLookupByLibrary.simpleMessage("动态分析"),
     "gold" : MessageLookupByLibrary.simpleMessage("金"),
     "jitterRangeToolTip" : MessageLookupByLibrary.simpleMessage("修改生成奖杯时间戳的抖动时间范围"),
@@ -70,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "scriptUnlockMenuButton" : MessageLookupByLibrary.simpleMessage("脚本解锁"),
     "searchTrophyHint" : MessageLookupByLibrary.simpleMessage("输入奖杯名称"),
     "silver" : MessageLookupByLibrary.simpleMessage("银"),
+    "sourceCode" : MessageLookupByLibrary.simpleMessage("源代码"),
     "staticAnalyzeAffectedTrophies" : MessageLookupByLibrary.simpleMessage("受该时间区影响的奖杯id"),
     "staticAnalyzeAffectedTrophiesAll" : MessageLookupByLibrary.simpleMessage("trophies字段留空意味着影响所有奖杯"),
     "staticAnalyzeMenuButton" : MessageLookupByLibrary.simpleMessage("静态分析"),
