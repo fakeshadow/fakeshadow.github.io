@@ -58,30 +58,29 @@ class UploadFileButton extends StatelessWidget {
     final reader = new html.FileReader();
     reader.readAsText(sfm);
     reader.onLoadEnd.listen((e) {
-      final PSVFileParser parser =
-          PSVFileParser.parseSFM(reader.result.toString());
+      PSVFileParser parser = PSVFileParser.parseSFM(reader.result.toString());
 
       final reader2 = new html.FileReader();
       reader2.readAsArrayBuffer(trans);
       reader2.onLoadEnd.listen((e) {
-        final PSVFileParser parser2 = parser.parseTRANS(reader2.result);
+        parser = parser.parseTRANS(reader2.result);
 
         final reader3 = new html.FileReader();
         reader3.readAsArrayBuffer(trpTitle);
         reader3.onLoadEnd.listen((e) {
-          final String trpTitle = PSVFileParser.parseTrpTitle(reader3.result);
+          parser = parser.parseTrpTitle(reader3.result);
 
           bloc.add(SetTrophy(
-            title: parser2.title,
-            havePlat: parser2.havePlat,
-            orgSetCount: parser2.orgSetCount,
-            jitter: parser2.jitter,
-            trpTrans: parser2.trpTrans,
-            trpTitle: trpTitle,
-            trophies: parser2.trophies,
+            title: parser.title,
+            havePlat: parser.havePlat,
+            orgSetCount: parser.orgSetCount,
+            jitter: parser.jitter,
+            trpTrans: parser.trpTrans,
+            trpTitle: parser.trpTitle,
+            trophies: parser.trophies,
           ));
 
-          final title = S.of(context).titleHead + parser2.title;
+          final title = S.of(context).titleHead + parser.title;
 
           BlocProvider.of<SystemBloc>(context).add(SetSystem(title: title));
           Navigator.of(context).pushNamed("editor");

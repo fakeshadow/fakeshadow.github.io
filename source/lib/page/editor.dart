@@ -28,9 +28,7 @@ class EditorPage extends StatelessWidget {
       },
       child: Scaffold(
           appBar: AppBar(
-            actions: <Widget>[
-              AdvancedFeaturePopup()
-            ],
+            actions: <Widget>[AdvancedFeaturePopup()],
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: Padding(
