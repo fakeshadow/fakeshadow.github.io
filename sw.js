@@ -2,8 +2,8 @@ var cacheName = 'shin-hentai-pwa';
 var filesToCache = [
   './',
   './index.html',
-  './shin_hentai.js',
-  './shin_hentai_bg.wasm',
+  './shin-hentai.js',
+  './shin-hentai_bg.wasm',
 ];
 
 /* Start the service worker and cache all of the app's content */
